@@ -15,7 +15,6 @@ defineProps({
       <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
       <p>{{ name }}</p>
-  <button @click="name = '景天'">转世</button>
     </h3>
   </div>
 
