@@ -113,7 +113,7 @@ export default {
   methods: {
     toHome: function () {
       this.$router.push({
-        name: "HomeView",
+        name: "HomePage",
         params: { user: "taro", age: 33 }
       })
     }
