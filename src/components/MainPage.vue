@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="test">
     <div class="title bg-slate-400">MainPage</div>
     <button @click="toHelloWorld">toLoginPage</button>
@@ -27,4 +27,4 @@ export default {
 .title {
   color: white;
 }
-</style>
+</style> -->

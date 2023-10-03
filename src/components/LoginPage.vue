@@ -1,5 +1,5 @@
 <template>
-  <button @click="toMainPage">toMainPage</button>
+  <button @click="toHome">toHome</button>
   <html class="h-full bg-gray-900">
     <body class="h-full">
       <div class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
@@ -111,9 +111,10 @@ export default {
     console.log(this.$route.params)
   },
   methods: {
-    toMainPage: function () {
+    toHome: function () {
       this.$router.push({
-        name: "MainPage"
+        name: "HomeView",
+        params: { user: "taro", age: 33 }
       })
     }
   }
