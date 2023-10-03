@@ -1,7 +1,7 @@
 <template>
   <div class="test">
     <div class="title bg-slate-400">MainPage</div>
-    <button @click="toHelloWorld">toHelloWorld</button>
+    <button @click="toHelloWorld">toLoginPage</button>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   methods: {
     toHelloWorld: function () {
       this.$router.push({
-        name: "HelloWorld",
+        name: "LoginPage",
         params: { user: "taro", age: 33 }
       })
     }

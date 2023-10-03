@@ -106,7 +106,7 @@
 
 <script>
 export default {
-  name: "HelloWorld",
+  name: "LoginPage",
   mounted: function () {
     console.log(this.$route.params)
   },
