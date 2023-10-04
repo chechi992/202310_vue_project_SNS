@@ -7,3 +7,8 @@ export default {
 }
 </script>
 
+<style lang="scss">
+@import #app {
+  font-family: "Baloo";
+}
+</style>
