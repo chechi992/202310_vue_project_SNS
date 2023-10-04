@@ -1,10 +1,10 @@
 <template>
   <div class="">
-    <button class="text-white" @click="toLoginView">toLoginPage</button>
-    <button class="text-white" @click="toSettingView">toSettingPage</button>
+    <button v-bind:class="[buttondefaultStyle]" @click="toLoginView">toLoginPage</button>
+    <button v-bind:class="[buttondefaultStyle]" @click="toSettingView">toSettingPage</button>
 
     <h3>Count:{{ count }}</h3>
-    <button class="text-white" @click="countPlus">
+    <button v-bind:class="[buttondefaultStyle]" @click="countPlus">
       {{ "CountAdd" }}
     </button>
     <div class="bg-tahiti py-96 w-1/2">asdsadsa</div>
@@ -18,6 +18,8 @@ import { ref } from "vue"
 const count = ref(0)
 //ルーター初期化
 const router = useRouter()
+
+const buttondefaultStyle = "text-white  m-4 p-2 rounded-md bg-gray_500"
 
 /**
  * ログインページへ遷移
