@@ -6,7 +6,7 @@
       <div class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
           <h1
-            class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white"
+            class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
           >
             Nodon
           </h1>
@@ -142,9 +142,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Baloo+2&family=Baloo+Tammudu+2:wght@700&family=Forum&family=Roboto:ital,wght@0,400;0,500;1,300&family=Titan+One&display=swap");
-
-h1 {
+.Titan_One {
   font-family: "Titan One";
 }
 
