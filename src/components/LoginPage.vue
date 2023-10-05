@@ -1,8 +1,4 @@
 <template>
-  <button @click="toHome">toHome</button>
-
-  <html class="h-full bg-black">
-    <body class="h-full">
       <div class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-sm">
           <h1
@@ -112,6 +108,7 @@
               ユーザー登録
             </button>
             <button
+              @click="toHome"
               type="submit"
               class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
@@ -120,8 +117,6 @@
           </div>
         </div>
       </div>
-    </body>
-  </html>
 </template>
 
 <script>
