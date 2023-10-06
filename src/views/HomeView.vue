@@ -45,10 +45,6 @@ const toSettingView = () => {
   router.push({ name: "UserSettingPage" })
 }
 
-const toRegisterView = () => {
-  router.push({ name: "RegisterPage" })
-}
-
 /**
  * CountPlus
  */
