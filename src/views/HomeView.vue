@@ -2,12 +2,13 @@
   <div class="">
     <button v-bind:class="[buttondefaultStyle]" @click="toLoginView">toLoginPage</button>
     <button v-bind:class="[buttondefaultStyle]" @click="toSettingView">toSettingPage</button>
+    <button v-bind:class="[buttondefaultStyle]" @click="toRegisterView">toRegisterPage</button>
 
     <h3>Count:{{ count }}</h3>
     <button v-bind:class="[buttondefaultStyle]" @click="countPlus">
       {{ "CountAdd" }}
     </button>
-    <div class="bg-tahiti py-96 w-1/2">asdsadsa</div>
+    <div class="w-1/2 bg-tahiti py-96">asdsadsa</div>
   </div>
 </template>
 
@@ -34,6 +35,10 @@ const toSettingView = () => {
   router.push({ name: "UserSettingPage" })
 }
 
+const toRegisterView = () => {
+  router.push({ name: "RegisterPage" })
+}
+
 /**
  * CountPlus
  */
@@ -42,5 +47,4 @@ const countPlus = () => {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
