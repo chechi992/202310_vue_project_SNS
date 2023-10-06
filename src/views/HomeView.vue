@@ -7,7 +7,7 @@
     <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
       {{ "CountAdd" }}
     </button>
-    <div class="bg-tahiti py-96 w-1/2">asdsadsa</div>
+    <div class="w-1/2 bg-tahiti py-96">asdsadsa</div>
   </div>
 </template>
 
@@ -43,6 +43,10 @@ const toLoginView = () => {
  */
 const toSettingView = () => {
   router.push({ name: "UserSettingPage" })
+}
+
+const toRegisterView = () => {
+  router.push({ name: "RegisterPage" })
 }
 
 /**
