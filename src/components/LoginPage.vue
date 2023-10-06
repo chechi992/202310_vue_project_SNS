@@ -101,6 +101,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
+          @click="toRegisterView"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -132,6 +133,10 @@ export default {
       })
     }
   }
+}
+
+const toRegisterView = () => {
+  router.push({ name: "RegisterPage" })
 }
 </script>
 
