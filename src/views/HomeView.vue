@@ -1,10 +1,10 @@
 <template>
   <div class="">
     <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toLoginView">toLoginPage</button>
-    <button v-bind:class="[buttondefaultStyle]" @click="toSettingView">toSettingPage</button>
+    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">toSettingPage</button>
 
-    <h3>Count:{{ count }}</h3>
-    <button v-bind:class="[buttondefaultStyle]" @click="countPlus">
+    <h3 class="text-white" >Count:{{ count }}</h3>
+    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
       {{ "CountAdd" }}
     </button>
     <div class="bg-tahiti py-96 w-1/2">asdsadsa</div>
@@ -19,10 +19,10 @@ const count = ref(0)
 //ルーター初期化
 const router = useRouter()
 
-const buttondefaultStyle = "text-white m-[10px] p-[10px] rounded-md bg-[#4a4a4a]"
+// const buttondefaultStyle = "text-white m-[10px] p-[10px] rounded-md bg-[#f43f5e]"
 
 //カスタマイズ属性
-const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#4a4a4a" }
+const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
 //カスタマイズ
 const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => {
   return "text-white " +
