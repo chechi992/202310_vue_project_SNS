@@ -73,6 +73,7 @@
             <input
               placeholder="ユーザ名"
               v-model="userInfo.name"
+              v-model="userInfo.name"
               type="text"
               autocomplete="username"
               required=""
@@ -85,6 +86,7 @@
           <div class="mt-2">
             <input
               placeholder="メールアドレス"
+              v-model="userInfo.email"
               v-model="userInfo.email"
               type="email"
               autocomplete="email"
@@ -99,6 +101,7 @@
             <input
               placeholder="パスワード"
               v-model="userInfo.pwd"
+              v-model="userInfo.pwd"
               type="password"
               autocomplete="current-password"
               required=""
@@ -111,6 +114,7 @@
           <div class="mt-2">
             <input
               placeholder="パスワード（確認用）"
+              v-model="userInfo.confirmPwd"
               v-model="userInfo.confirmPwd"
               type="password"
               required=""
@@ -126,6 +130,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
+          @click="toLoginView"
           @click="toLoginView"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -149,9 +154,10 @@ import { ref } from "vue"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../firebaseConfig"
 import { useRouter } from "vue-router"
-import { computed } from "vue"
-import { addDoc, collection } from "firebase/firestore"
 
+import { computed } from "vue"
+
+import { addDoc, collection } from "firebase/firestore"
 import { db } from "../firebaseConfig"
 
 const router = useRouter()
@@ -172,7 +178,21 @@ const confirmPassword = () => {
   } else {
     return false
   }
+/**
+ * パスワード二次確認
+ * @return true or false
+ */
+const confirmPassword = () => {
+  if (userInfo.value.pwd === userInfo.value.confirmPwd) {
+    return true
+  } else {
+    return false
+  }
 }
+
+/**
+ *アカウント作成メソッド
+ */
 
 /**
  *アカウント作成メソッド
@@ -189,13 +209,15 @@ const register = () => {
     createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
       .then((data) => {
         console.log("successfully registered", data)
+        /**
+         * 增加userID進去firestore
+         */
         // Add user information to Firestore
         const userRef = collection(db, "users")
         const userDoc = {
           UID: data.user.uid,
           name: userInfo.value.name,
           email: userInfo.value.email
-          // Add any other user information you want to store
         }
 
         addDoc(userRef, userDoc)
@@ -206,7 +228,9 @@ const register = () => {
             console.error("Error adding user to Firestore:", error)
           })
 
-        // Redirect to the home page
+        /**
+         * 回homePage
+         */
         router.push({ name: "HomePage" })
       })
       .catch((error) => {
