@@ -1,5 +1,3 @@
-<!-- 目前沒有用到 -->
-
 <template>
   <div class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -66,30 +64,13 @@
       </div>
     </div>
 
-    <!-- login tab -->
-
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+    <div class="mt-3 sm:mx-auto sm:w-full sm:max-w-lg">
+      <span class="flex justify-center p-3 text-xs text-white login_title"> メールでログイン </span>
       <form class="p-5 space-y-6 bg-gray_500" action="#" method="POST">
         <div>
           <div class="mt-2">
             <input
-              placeholder="ユーザ名"
-              v-model="user"
-              id="username"
-              name="username"
-              type="text"
-              autocomplete="username"
-              required=""
-              class="block w-full p-2 text-gray-900 border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
-
-        <div>
-          <div class="mt-2">
-            <input
               placeholder="メールアドレス"
-              v-model="email"
               id="email"
               name="email"
               type="email"
@@ -104,7 +85,6 @@
           <div class="mt-2">
             <input
               placeholder="パスワード"
-              v-model="password"
               id="password"
               name="password"
               type="password"
@@ -114,37 +94,25 @@
             />
           </div>
         </div>
-
-        <div>
-          <div class="mt-2">
-            <input
-              placeholder="パスワード（確認用）"
-              @input="comfirmPassword"
-              v-model="comfirm"
-              id="comfirm-Password"
-              name="comfirm-Password"
-              type="comfirm-Password"
-              required=""
-              class="block w-full p-2 text-gray-900 border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            />
-          </div>
-        </div>
+        <a href="##" class="text-right login_forgot_password"
+          ><span class="block mt-3 text-sm text-white"> パスワードを忘れた場合 </span></a
+        >
       </form>
 
       <div class="flex justify-end gap-2 mt-3">
+        <button
+          @click="toRegisterView"
+          type="submit"
+          class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          ユーザー登録
+        </button>
         <button
           @click="toHome"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          戻る
-        </button>
-        <button
-          @click="register"
-          type="submit"
-          class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-          登録
+          ログイン
         </button>
       </div>
     </div>
@@ -163,40 +131,12 @@ export default {
         name: "HomePage",
         params: { user: "taro", age: 33 }
       })
+    },
+    toRegisterView: function () {
+      this.$router.push({
+        name: "RegisterPage",
+      })
     }
-  }
-}
-
-import { ref } from "vue"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
-import { useRouter } from "vue-router"
-const router = useRouter()
-
-const user = ref("")
-const email = ref("")
-const password = ref("")
-const confirm = ref("")
-
-const register = () => {
-  console.log(user)
-  createUserWithEmailAndPassword(getAuth(), email.value, password.value)
-    .then((data) => {
-      console.log("Successfully registered")
-      router.push({ name: "UserSettingPage" })
-    })
-    .catch((error) => {
-      console.log(error.code)
-      alert(error.message)
-    })
-}
-
-const confirmPassword = () => {
-  if (password.value !== confirm.value) {
-    invalidPasswords.value = true
-    submitDisabled.value = true
-  } else {
-    invalidPasswords.value = false
-    submitDisabled.value = false
   }
 }
 </script>

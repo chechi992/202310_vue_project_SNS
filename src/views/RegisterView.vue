@@ -72,9 +72,7 @@
           <div class="mt-2">
             <input
               placeholder="ユーザ名"
-              v-model="user"
-              id="username"
-              name="username"
+              v-model="userInfo.name"
               type="text"
               autocomplete="username"
               required=""
@@ -87,9 +85,7 @@
           <div class="mt-2">
             <input
               placeholder="メールアドレス"
-              v-model="email"
-              id="email"
-              name="email"
+              v-model="userInfo.email"
               type="email"
               autocomplete="email"
               required=""
@@ -102,9 +98,7 @@
           <div class="mt-2">
             <input
               placeholder="パスワード"
-              v-model="password"
-              id="password"
-              name="password"
+              v-model="userInfo.pwd"
               type="password"
               autocomplete="current-password"
               required=""
@@ -117,10 +111,7 @@
           <div class="mt-2">
             <input
               placeholder="パスワード（確認用）"
-              @input="comfirmPassword"
-              v-model="comfirm"
-              id="comfirm-Password"
-              name="comfirm-Password"
+              v-model="userInfo.confirmPwd"
               type="password"
               required=""
               class="block w-full p-2 text-white border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:text-white sm:text-sm sm:leading-6"
@@ -131,7 +122,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
-          @click="toHome"
+          @click="toLoginView"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -150,60 +141,54 @@
 </template>
 
 <script setup>
-import RegisterPage from "../components/RegisterPage.vue"
-
-/* 目前會有bug */
-/* export default {
-  name: "LoginPage",
-  mounted: function () {
-    console.log(this.$route.params)
-  },
-  methods: {
-    toHome: function () {
-      this.$router.push({
-        name: "HomePage",
-        params: { user: "taro", age: 33 }
-      })
-    }
-  }
-} */
-
 import { ref } from "vue"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword } from "firebase/auth"
+import {auth} from "../firebaseConfig"
 import { useRouter } from "vue-router"
+
 const router = useRouter()
 
-const user = ref("")
-const email = ref("")
-const password = ref("")
-const confirm = ref("")
+const userInfo = ref({ name: "", email: "", pwd: "", confirmPwd: "" })
 
-const toHome = () => {
-  router.push({ name: "HomePage" })
+const toLoginView = () => {
+  router.push({ name: "LoginPage" })
 }
-const register = () => {
-  console.log(user)
 
-  createUserWithEmailAndPassword(getAuth(), email.value, password.value)
-    .then((data) => {
-      console.log("Successfully registered")
-      router.push({ name: "UserSettingPage" })
-    })
-    .catch((error) => {
-      console.log(error.code)
-      alert(error.message)
-    })
-}
-/* 目前沒有用到 */
+/**
+ * パスワード二次確認
+ * @return true or false
+ */
 const confirmPassword = () => {
-  if (password.value !== confirm.value) {
-    invalidPasswords.value = true
-    submitDisabled.value = true
+  if (userInfo.value.pwd === userInfo.value.confirmPwd) {
+    return true
   } else {
-    invalidPasswords.value = false
-    submitDisabled.value = false
+    return false
   }
 }
+
+/**
+ *アカウント作成メソッド
+ */
+const register = () => {
+  console.log("Register start", userInfo.value)
+  if (
+    confirmPassword() &&
+    userInfo.value.email !== "" &&
+    userInfo.value.name !== "" &&
+    userInfo.value.pwd !== "" &&
+    userInfo.value.confirmPwd !== ""
+  ) {
+    createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
+      .then((data) => {
+        console.log("successfully registered", data)
+        router.push({ name: "HomePage" })
+      })
+      .catch((error) => {
+        console.error("Register Fail: ", error.code)
+      })
+  }
+}
+
 </script>
 
 <style scoped lang="scss">
