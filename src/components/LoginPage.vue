@@ -120,6 +120,9 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router"
+const router = useRouter()
+
 export default {
   name: "LoginPage",
   mounted: function () {
@@ -127,16 +130,12 @@ export default {
   },
   methods: {
     toHome: function () {
-      this.$router.push({
-        name: "HomePage",
-        params: { user: "taro", age: 33 }
-      })
+      this.$router.push({ name: "HomePage", params: { user: "taro", age: 33 } })
+    },
+    toRegisterView: function () {
+      this.$router.push({ name: "RegisterPage" })
     }
   }
-}
-
-const toRegisterView = () => {
-  router.push({ name: "RegisterPage" })
 }
 </script>
 

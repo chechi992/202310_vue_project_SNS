@@ -195,7 +195,7 @@ const register = () => {
     })
 }
 /* 目前沒有用到 */
-const confirmPassword = () => {
+/* const confirmPassword = () => {
   if (password.value !== confirm.value) {
     invalidPasswords.value = true
     submitDisabled.value = true
@@ -203,7 +203,7 @@ const confirmPassword = () => {
     invalidPasswords.value = false
     submitDisabled.value = false
   }
-}
+} */
 </script>
 
 <style scoped lang="scss">
