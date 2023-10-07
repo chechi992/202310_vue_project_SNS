@@ -1,7 +1,7 @@
-import firebase from "firebase/compat/app"
-import "firebase/compat/firestore"
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore"
+import { getAuth } from "firebase/auth"
+
 export const firebaseConfig = {
   apiKey: "AIzaSyAXLwNXt8ZHBKjSxEn5vAlx0h68N2CTkL4",
   authDomain: "vue-project-sns.firebaseapp.com",
@@ -12,5 +12,10 @@ export const firebaseConfig = {
   measurementId: "G-PHMKERK8GM"
 }
 
-firebase.initializeApp(firebaseConfig)
-export const firesotre = firebase.firestore()
+const app = initializeApp(firebaseConfig)
+export const db = getFirestore(app)
+export const auth = getAuth(app)
+
+/* 
+測試
+*/

@@ -13,6 +13,7 @@ module.exports = {
       tahiti: "#3ab7bf",
       silver: "#ecebff",
       "bubble-gum": "#ff77e9",
+      red: "#FF2d2d",
       bermuda: "#78dcca"
     },
     extend: {}
