@@ -117,7 +117,7 @@
               class="block w-full p-2 text-white border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:text-white sm:text-sm sm:leading-6"
             />
             <!-- パスワードが一致しません -->
-            <p v-show="!isPasswordMatch" class="mt-1 mr-2 text-xs text-red">
+            <p v-show="!confirmPassword" class="mt-1 mr-2 text-xs text-red">
               パスワードが一致しません
             </p>
           </div>
@@ -126,7 +126,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
-          @click="toLoginView"
+          @click="pushToOtherView('LoginPage')"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -149,44 +149,42 @@ import { ref } from "vue"
 import { createUserWithEmailAndPassword } from "firebase/auth"
 import { auth } from "../firebaseConfig"
 import { useRouter } from "vue-router"
-
 import { computed } from "vue"
-
 import { addDoc, collection } from "firebase/firestore"
 import { db } from "../firebaseConfig"
 
+//ルーターメソッド初期化
 const router = useRouter()
 
+//登録のアカウトデータ
 const userInfo = ref({ name: "", email: "", pwd: "", confirmPwd: "" })
 
-const toLoginView = () => {
-  router.push({ name: "LoginPage" })
+/**
+ * 対象ページへ遷移する
+ * pageName 対象ページの名前
+ */
+const pushToOtherView = (pageName) => {
+  router.push({ name: pageName })
 }
 
 /**
- * パスワード二次確認
+ * v-showを使って、パスワード二次確認
  * @return true or false
  */
-const confirmPassword = () => {
-  if (userInfo.value.pwd === userInfo.value.confirmPwd) {
-    return true
+const confirmPassword = computed(() => {
+  if (userInfo.value.pwd !== "") {
+    return userInfo.value.pwd === userInfo.value.confirmPwd
   } else {
     return false
   }
-}
+})
 
 /**
  *アカウント作成メソッド
  */
 const register = () => {
   console.log("Register start", userInfo.value)
-  if (
-    confirmPassword() &&
-    userInfo.value.email !== "" &&
-    userInfo.value.name !== "" &&
-    userInfo.value.pwd !== "" &&
-    userInfo.value.confirmPwd !== ""
-  ) {
+  if (confirmPassword.value && userInfo.value.email !== "") {
     createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
       .then((data) => {
         console.log("successfully registered", data)
@@ -204,28 +202,17 @@ const register = () => {
         addDoc(userRef, userDoc)
           .then(() => {
             console.log("User added to Firestore")
+            pushToOtherView("HomePage")
           })
           .catch((error) => {
             console.error("Error adding user to Firestore:", error)
           })
-
-        /**
-         * 回homePage
-         */
-        router.push({ name: "HomePage" })
       })
       .catch((error) => {
         console.error("Register Fail: ", error.code)
       })
   }
 }
-
-/**
- * v-showを使って、
- */
-const isPasswordMatch = computed(() => {
-  return userInfo.value.pwd === userInfo.value.confirmPwd
-})
 </script>
 
 <style scoped lang="scss">
