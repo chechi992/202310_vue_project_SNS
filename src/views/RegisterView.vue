@@ -157,9 +157,9 @@ const fbService = new FbService()
 //登録のアカウトデータ
 const userInfo = ref({
   name: "",
-  email: "taes60711@gmail.com",
-  pwd: "toto60711",
-  confirmPwd: "toto60711"
+  email: "",
+  pwd: "",
+  confirmPwd: ""
 })
 
 /**
