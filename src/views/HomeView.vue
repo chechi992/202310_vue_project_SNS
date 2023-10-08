@@ -29,11 +29,14 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { ref } from "vue"
+import { ref, onMounted } from "vue"
+import { FbService } from "../Service/FbService"
 
 const count = ref(0)
-//ルーター初期化
+//ルーターメソッド初期化
 const router = useRouter()
+//Firebaseサービス初期化
+const fbService = new FbService()
 
 // const buttondefaultStyle = "text-white m-[10px] p-[10px] rounded-md bg-[#f43f5e]"
 
@@ -49,8 +52,7 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
 /**
  * 判斷登入登出與signout
  */
-import { onMounted } from "vue"
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"
+import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 const isLoggedIn = ref(false)
 
@@ -58,6 +60,7 @@ let auth
 onMounted(() => {
   auth = getAuth()
   onAuthStateChanged(auth, (user) => {
+    console.log("user", user)
     if (user) {
       isLoggedIn.value = true
     } else {
@@ -67,10 +70,10 @@ onMounted(() => {
 })
 
 /**
- * sign out
+ * ユーザログアウト
  */
-const SignOut = () => {
-  signOut(auth).then(() => {
+const SignOut = async () => {
+  await fbService.signOutAccount().then(() => {
     router.push({ name: "LoginPage" })
   })
 }

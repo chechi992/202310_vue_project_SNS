@@ -82,7 +82,8 @@
         </div>
 
         <div>
-          <div class="mt-2">
+          <div class="mt-1">
+            <div class="bg-red w-[31px] mb-1 rounded text-white text-sm">必須</div>
             <input
               placeholder="メールアドレス"
               v-model="userInfo.email"
@@ -95,7 +96,8 @@
         </div>
 
         <div>
-          <div class="mt-2">
+          <div class="mt-1">
+            <div class="bg-red w-[31px] mb-1 rounded text-white text-sm">必須</div>
             <input
               placeholder="パスワード"
               v-model="userInfo.pwd"
@@ -145,9 +147,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue"
+import { ref ,computed } from "vue"
 import { useRouter } from "vue-router"
-import { computed } from "vue"
 import { FbService } from "../Service/FbService"
 
 //ルーターメソッド初期化
