@@ -71,8 +71,7 @@
           <div class="mt-2">
             <input
               placeholder="メールアドレス"
-              id="email"
-              name="email"
+              v-model="userInfo.email"
               type="email"
               autocomplete="email"
               required=""
@@ -85,7 +84,7 @@
           <div class="mt-2">
             <input
               placeholder="パスワード"
-              id="password"
+              v-model="userInfo.pwd"
               name="password"
               type="password"
               autocomplete="current-password"
@@ -108,7 +107,7 @@
           ユーザー登録
         </button>
         <button
-          @click="toHome"
+          @click="SignIn"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -119,11 +118,44 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { useRouter } from "vue-router"
 const router = useRouter()
 
-export default {
+import { ref } from "vue"
+
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+
+//Firebaseサービス初期化
+
+//登録のアカウトデータ
+const userInfo = ref({
+  email: "",
+  pwd: ""
+})
+
+const pushToOtherPage = (pageName) => {
+  router.push({ name: pageName })
+}
+
+const SignIn = () => {
+  const auth = getAuth()
+  signInWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
+    .then((data) => {
+      console.log("successfully Signin", auth.currentUser, data)
+      pushToOtherPage("UserSettingPage")
+    })
+    .catch((error) => {
+      console.error("Login Fail: ", error.code, error.message)
+      // Display an error message to the user
+    })
+}
+
+const toRegisterView = async () => {
+  pushToOtherPage("RegisterPage")
+}
+
+/* export default {
   name: "LoginPage",
   mounted: function () {
     console.log(this.$route.params)
@@ -141,7 +173,7 @@ export default {
       })
     }
   }
-}
+} */
 </script>
 
 <style scoped lang="scss">
