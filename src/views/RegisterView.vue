@@ -117,7 +117,7 @@
               class="block w-full p-2 text-white border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:text-white sm:text-sm sm:leading-6"
             />
             <!-- パスワードが一致しません -->
-            <p v-show="!isPasswordMatch" class="mt-1 mr-2 text-xs text-red">
+            <p v-show="!confirmPassword" class="mt-1 mr-2 text-xs text-red">
               パスワードが一致しません
             </p>
           </div>
@@ -126,7 +126,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
-          @click="toLoginView"
+          @click="pushToOtherView('LoginPage')"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -146,86 +146,48 @@
 
 <script setup>
 import { ref } from "vue"
-import { createUserWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../firebaseConfig"
 import { useRouter } from "vue-router"
-
 import { computed } from "vue"
+import { FbService } from "../Service/FbService"
 
-import { addDoc, collection } from "firebase/firestore"
-import { db } from "../firebaseConfig"
-
+//ルーターメソッド初期化
 const router = useRouter()
+//Firebaseサービス初期化
+const fbService = new FbService()
+//登録のアカウトデータ
+const userInfo = ref({
+  name: "",
+  email: "",
+  pwd: "",
+  confirmPwd: ""
+})
 
-const userInfo = ref({ name: "", email: "", pwd: "", confirmPwd: "" })
-
-const toLoginView = () => {
-  router.push({ name: "LoginPage" })
+/**
+ * 対象ページへ遷移する
+ * pageName 対象ページの名前
+ */
+const pushToOtherView = (pageName) => {
+  router.push({ name: pageName })
 }
 
 /**
- * パスワード二次確認
+ * v-showを使って、パスワード二次確認
  * @return true or false
  */
-const confirmPassword = () => {
-  if (userInfo.value.pwd === userInfo.value.confirmPwd) {
-    return true
-  } else {
-    return false
-  }
-}
+const confirmPassword = computed(() => {
+  return userInfo.value.pwd !== "" && userInfo.value.pwd === userInfo.value.confirmPwd
+})
 
 /**
  *アカウント作成メソッド
  */
-const register = () => {
+const register = async () => {
   console.log("Register start", userInfo.value)
-  if (
-    confirmPassword() &&
-    userInfo.value.email !== "" &&
-    userInfo.value.name !== "" &&
-    userInfo.value.pwd !== "" &&
-    userInfo.value.confirmPwd !== ""
-  ) {
-    createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-      .then((data) => {
-        console.log("successfully registered", data)
-        /**
-         * 增加userID進去firestore
-         */
-        // Add user information to Firestore
-        const userRef = collection(db, "users")
-        const userDoc = {
-          UID: data.user.uid,
-          name: userInfo.value.name,
-          email: userInfo.value.email
-        }
-
-        addDoc(userRef, userDoc)
-          .then(() => {
-            console.log("User added to Firestore")
-          })
-          .catch((error) => {
-            console.error("Error adding user to Firestore:", error)
-          })
-
-        /**
-         * 回homePage
-         */
-        router.push({ name: "HomePage" })
-      })
-      .catch((error) => {
-        console.error("Register Fail: ", error.code)
-      })
+  if (confirmPassword.value && userInfo.value.email !== "") {
+    fbService.registerAccount(userInfo)
+    pushToOtherView("HomePage")
   }
 }
-
-/**
- * v-showを使って、
- */
-const isPasswordMatch = computed(() => {
-  return userInfo.value.pwd === userInfo.value.confirmPwd
-})
 </script>
 
 <style scoped lang="scss">
