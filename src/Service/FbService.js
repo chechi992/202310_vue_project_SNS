@@ -5,10 +5,11 @@ import { auth } from "../firebaseConfig"
 
 export class FbService {
   //ユーザー登録
-  registerAccount = (userInfo) => {
-    createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-      .then((data) => {
-        console.log("successfully registered", data)
+  registerAccount = async (userInfo) => {
+    let isRegisterSucessfull = false;
+    await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
+      .then(async (data) => {
+        console.log("successfully registered", data);
         //增加userID進去firestore
         const userRef = collection(db, "users")
         const userDoc = {
@@ -16,16 +17,20 @@ export class FbService {
           name: userInfo.value.name,
           email: userInfo.value.email
         }
-        addDoc(userRef, userDoc)
+        await addDoc(userRef, userDoc)
           .then(() => {
-            console.log("User added to Firestore")
+            isRegisterSucessfull = true;
+            console.log("User added to Firestore");
           })
           .catch((error) => {
-            console.error("Error adding user to Firestore:", error)
+            console.error("Error adding user to Firestore:", error);
           })
       })
       .catch((error) => {
-        console.error("Register Fail: ", error.code)
+        console.error("Register Fail: ", error.code);
       })
+    return new Promise((resolve) => {
+      resolve(isRegisterSucessfull);
+    });
   }
 }
