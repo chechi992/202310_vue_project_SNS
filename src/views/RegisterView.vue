@@ -146,18 +146,21 @@
 
 <script setup>
 import { ref } from "vue"
-import { createUserWithEmailAndPassword } from "firebase/auth"
-import { auth } from "../firebaseConfig"
 import { useRouter } from "vue-router"
 import { computed } from "vue"
-import { addDoc, collection } from "firebase/firestore"
-import { db } from "../firebaseConfig"
+import { FbService } from "../Service/FbService"
 
 //ルーターメソッド初期化
 const router = useRouter()
-
+//Firebaseサービス初期化
+const fbService = new FbService()
 //登録のアカウトデータ
-const userInfo = ref({ name: "", email: "", pwd: "", confirmPwd: "" })
+const userInfo = ref({
+  name: "",
+  email: "taes60711@gmail.com",
+  pwd: "toto60711",
+  confirmPwd: "toto60711"
+})
 
 /**
  * 対象ページへ遷移する
@@ -182,35 +185,11 @@ const confirmPassword = computed(() => {
 /**
  *アカウント作成メソッド
  */
-const register = () => {
+const register = async () => {
   console.log("Register start", userInfo.value)
   if (confirmPassword.value && userInfo.value.email !== "") {
-    createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-      .then((data) => {
-        console.log("successfully registered", data)
-        /**
-         * 增加userID進去firestore
-         */
-        // Add user information to Firestore
-        const userRef = collection(db, "users")
-        const userDoc = {
-          UID: data.user.uid,
-          name: userInfo.value.name,
-          email: userInfo.value.email
-        }
-
-        addDoc(userRef, userDoc)
-          .then(() => {
-            console.log("User added to Firestore")
-            pushToOtherView("HomePage")
-          })
-          .catch((error) => {
-            console.error("Error adding user to Firestore:", error)
-          })
-      })
-      .catch((error) => {
-        console.error("Register Fail: ", error.code)
-      })
+    fbService.registerAccount(userInfo)
+    pushToOtherView("HomePage");
   }
 }
 </script>
