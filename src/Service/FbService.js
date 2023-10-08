@@ -31,7 +31,7 @@ export class FbService {
           })
       })
       .catch((error) => {
-        console.error("Register Fail: ", error.code)
+        console.error("Register Fail: ", error.code);
       })
     return new Promise((resolve) => {
       resolve(isRegisterSucessfull);
