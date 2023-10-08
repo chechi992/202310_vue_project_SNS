@@ -157,9 +157,9 @@ const fbService = new FbService()
 //登録のアカウトデータ
 const userInfo = ref({
   name: "",
-  email: "taes60711@gmail.com",
-  pwd: "toto60711",
-  confirmPwd: "toto60711"
+  email: "",
+  pwd: "",
+  confirmPwd: ""
 })
 
 /**
@@ -175,7 +175,7 @@ const pushToOtherView = (pageName) => {
  * @return true or false
  */
 const confirmPassword = computed(() => {
-    return userInfo.value.pwd !== "" && userInfo.value.pwd === userInfo.value.confirmPwd
+  return userInfo.value.pwd !== "" && userInfo.value.pwd === userInfo.value.confirmPwd
 })
 
 /**
@@ -185,7 +185,7 @@ const register = async () => {
   console.log("Register start", userInfo.value)
   if (confirmPassword.value && userInfo.value.email !== "") {
     fbService.registerAccount(userInfo)
-    pushToOtherView("HomePage");
+    pushToOtherView("HomePage")
   }
 }
 </script>
