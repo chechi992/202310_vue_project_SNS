@@ -184,8 +184,10 @@ const confirmPassword = computed(() => {
 const register = async () => {
   console.log("Register start", userInfo.value)
   if (confirmPassword.value && userInfo.value.email !== "") {
-    fbService.registerAccount(userInfo)
-    pushToOtherView("HomePage")
+    await fbService.registerAccount(userInfo).then((result) => {
+      console.log("Register IsSuccessFull?", result)
+      result ? pushToOtherView("HomePage") : console.log("Register Fail")
+    })
   }
 }
 </script>
