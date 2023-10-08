@@ -1,9 +1,25 @@
 <template>
   <div class="">
-    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toLoginView">toLoginPage</button>
-    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">toSettingPage</button>
+    <h1
+      class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
+    >
+      HomeView
+    </h1>
+    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toLoginView">
+      toLoginPage
+    </button>
+    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
+      toSettingPage
+    </button>
+    <button
+      v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+      @click="SignOut"
+      v-if="isLoggedIn"
+    >
+      Sign out
+    </button>
 
-    <h3 class="text-white" >Count:{{ count }}</h3>
+    <h3 class="text-white">Count:{{ count }}</h3>
     <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
       {{ "CountAdd" }}
     </button>
@@ -25,13 +41,39 @@ const router = useRouter()
 const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
 //カスタマイズ
 const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => {
-  return "text-white " +
-    "m-[" + m + "px] " +
-    "p-[" + p + "px] " + 
-    "rounded-md " +
-    "bg-[" + bcolor + "] ";
+  return (
+    "text-white " + "m-[" + m + "px] " + "p-[" + p + "px] " + "rounded-md " + "bg-[" + bcolor + "] "
+  )
 }
 
+/**
+ * 判斷登入登出與signout
+ */
+import { onMounted } from "vue"
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"
+
+const isLoggedIn = ref(false)
+
+let auth
+onMounted(() => {
+  auth = getAuth()
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isLoggedIn.value = true
+    } else {
+      isLoggedIn.value = false
+    }
+  })
+})
+
+/**
+ * sign out
+ */
+const SignOut = () => {
+  signOut(auth).then(() => {
+    router.push({ name: "LoginPage" })
+  })
+}
 /**
  * ログインページへ遷移
  */

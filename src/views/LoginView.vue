@@ -75,7 +75,7 @@
               type="email"
               autocomplete="email"
               required=""
-              class="block w-full p-2 text-gray-900 border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full p-2 text-white border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
@@ -89,10 +89,14 @@
               type="password"
               autocomplete="current-password"
               required=""
-              class="block w-full p-2 text-gray-900 border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full p-2 text-white border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
           </div>
         </div>
+
+        <!-- 錯誤訊息 -->
+        <p v-if="errMsg" class="text-red">{{ errMsg }}</p>
+
         <a href="##" class="text-right login_forgot_password"
           ><span class="block mt-3 text-sm text-white"> パスワードを忘れた場合 </span></a
         >
@@ -134,46 +138,81 @@ const userInfo = ref({
   pwd: ""
 })
 
+/**
+ * 錯誤資訊
+ */
+const errMsg = ref()
+
 const pushToOtherPage = (pageName) => {
   router.push({ name: pageName })
 }
 
+/**
+ * 登入function與error code
+ * case無法抓到特定錯誤（需要更改firebase的安全性？）
+ */
 const SignIn = () => {
   const auth = getAuth()
   signInWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
     .then((data) => {
       console.log("successfully Signin", auth.currentUser, data)
-      pushToOtherPage("UserSettingPage")
+      pushToOtherPage("HomePage")
     })
     .catch((error) => {
-      console.error("Login Fail: ", error.code, error.message)
+      console.error("Login Fail: ", error.code)
+      switch (error.code) {
+        case "auth/invalid-email":
+          errMsg.value = "Invalid email"
+          break
+        case "auth/user-not-found":
+          errMsg.value = "No account with that email was found"
+          break
+        case "auth/wrong-password":
+          errMsg.value = "Incorrect password"
+          break
+        case "auth/too-many-requests":
+          errMsg.value = "too-many-requests"
+          break
+        default:
+          errMsg.value = "Email or password was incorrect"
+          break
+      }
       // Display an error message to the user
     })
 }
 
+/**
+ * 驗證使用者是否是登入狀態
+ */
+import { createApp } from "vue"
+import App from "../App.vue"
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "../firebaseConfig.js" // 你的 Firebase auth 實例
+const app = createApp(App)
+
+// 在 Vue 3 中，你可能需要使用 provide 和 inject 來全局訪問 auth 實例
+app.provide("auth", auth)
+
+// 在應用程序初始化時監聽用戶的身份狀態變化
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    // 用戶已經登錄，可以執行相應的處理
+    console.log("User is logged in:", user)
+
+    // 在這裡根據用戶的身份狀態進行相應的導航
+    // 例如，如果用戶已經登錄，可以將其導向已驗證的頁面
+    // 如果用戶未登錄，可以將其導向登錄頁面
+    router.push({ name: "HomePage" }) // 導向已驗證的頁面
+  } else {
+    // 用戶未登錄或登出，可以執行相應的處理
+    console.log("User is logged out")
+    router.push({ name: "LoginPage" })
+  }
+})
+
 const toRegisterView = async () => {
   pushToOtherPage("RegisterPage")
 }
-
-/* export default {
-  name: "LoginPage",
-  mounted: function () {
-    console.log(this.$route.params)
-  },
-  methods: {
-    toHome: function () {
-      this.$router.push({
-        name: "HomePage",
-        params: { user: "taro", age: 33 }
-      })
-    },
-    toRegisterView: function () {
-      this.$router.push({
-        name: "RegisterPage"
-      })
-    }
-  }
-} */
 </script>
 
 <style scoped lang="scss">
