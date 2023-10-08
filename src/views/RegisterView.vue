@@ -157,9 +157,9 @@ const fbService = new FbService()
 //登録のアカウトデータ
 const userInfo = ref({
   name: "",
-  email: "",
-  pwd: "",
-  confirmPwd: ""
+  email: "taes60711@gmail.com",
+  pwd: "toto60711",
+  confirmPwd: "toto60711"
 })
 
 /**
@@ -184,8 +184,10 @@ const confirmPassword = computed(() => {
 const register = async () => {
   console.log("Register start", userInfo.value)
   if (confirmPassword.value && userInfo.value.email !== "") {
-    fbService.registerAccount(userInfo)
-    pushToOtherView("HomePage")
+    await fbService.registerAccount(userInfo).then((result) => {
+      console.log("Register IsSuccessFull?", result)
+      result ? pushToOtherView("HomePage") : console.log("Register Fail")
+    })
   }
 }
 </script>
