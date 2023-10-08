@@ -175,11 +175,7 @@ const pushToOtherView = (pageName) => {
  * @return true or false
  */
 const confirmPassword = computed(() => {
-  if (userInfo.value.pwd !== "") {
-    return userInfo.value.pwd === userInfo.value.confirmPwd
-  } else {
-    return false
-  }
+    return userInfo.value.pwd !== "" && userInfo.value.pwd === userInfo.value.confirmPwd
 })
 
 /**
