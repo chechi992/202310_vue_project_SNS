@@ -147,7 +147,7 @@
 </template>
 
 <script setup>
-import { ref ,computed } from "vue"
+import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import { FbService } from "../Service/FbService"
 
@@ -187,10 +187,27 @@ const register = async () => {
   if (confirmPassword.value && userInfo.value.email !== "") {
     await fbService.registerAccount(userInfo).then((result) => {
       console.log("Register IsSuccessFull?", result)
+      auth = getAuth()
+      // 假設 auth 是通過 getAuth() 取得的 Authentication 實例，user 是成功註冊或登入的用戶對象
+      sendEmailVerification(auth.currentUser)
+        .then(() => {
+          // 驗證電子郵件已成功發送
+          console.log("Verification email sent!")
+        })
+        .catch((error) => {
+          // 發送驗證電子郵件時出錯
+          console.error("Error sending verification email: ", error)
+        })
       result ? pushToOtherView("HomePage") : console.log("Register Fail")
     })
   }
 }
+
+/**
+ * 寄電子郵件
+ */
+let auth
+import { getAuth, sendEmailVerification } from "firebase/auth"
 </script>
 
 <style scoped lang="scss">

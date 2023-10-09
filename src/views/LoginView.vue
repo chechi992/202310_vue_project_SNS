@@ -200,6 +200,7 @@ onAuthStateChanged(auth, (user) => {
     console.log("User is logged in:", user)
 
     // 在這裡根據用戶的身份狀態進行相應的導航
+
     // 例如，如果用戶已經登錄，可以將其導向已驗證的頁面
     // 如果用戶未登錄，可以將其導向登錄頁面
     router.push({ name: "HomePage" }) // 導向已驗證的頁面

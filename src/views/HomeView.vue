@@ -18,6 +18,10 @@
     >
       Sign out
     </button>
+    <!-- 簡單新增未完成信箱的按鈕 -->
+    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" v-if="!isEmailVerified">
+      未完成信箱認證
+    </button>
 
     <h3 class="text-white">Count:{{ count }}</h3>
     <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
@@ -56,6 +60,11 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 const isLoggedIn = ref(false)
 
+/**
+ * 認證使用者驗證email與否
+ */
+const isEmailVerified = ref(false)
+
 let auth
 onMounted(() => {
   auth = getAuth()
@@ -63,6 +72,16 @@ onMounted(() => {
     console.log("user", user)
     if (user) {
       isLoggedIn.value = true
+      // 檢查用戶是否已經通過身份驗證
+      if (user.emailVerified) {
+        // 用戶已通過身份驗證
+        console.log("已完成身份認證")
+        isEmailVerified.value = true
+      } else {
+        // 用戶未通過身份驗證
+        console.log("未完成身份認證")
+        isEmailVerified.value = false
+      }
     } else {
       isLoggedIn.value = false
     }

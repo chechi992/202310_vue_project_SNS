@@ -10,10 +10,10 @@ export class FbService {
    * @returns 登録結果：true，false
    */
   registerAccount = async (userInfo) => {
-    let isRegisterSucessfull = false;
+    let isRegisterSucessfull = false
     await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
       .then(async (data) => {
-        console.log("successfully registered", data);
+        console.log("successfully registered", data)
         //增加userID進去firestore
         const userRef = collection(db, "users")
         const userDoc = {
@@ -23,29 +23,29 @@ export class FbService {
         }
         await addDoc(userRef, userDoc)
           .then(() => {
-            isRegisterSucessfull = true;
-            console.log("User added to Firestore");
+            isRegisterSucessfull = true
+            console.log("User added to Firestore")
           })
           .catch((error) => {
-            console.error("Error adding user to Firestore:", error);
+            console.error("Error adding user to Firestore:", error)
           })
       })
       .catch((error) => {
-        console.error("Register Fail: ", error.code);
+        console.error("Register Fail: ", error.code)
       })
     return new Promise((resolve) => {
-      resolve(isRegisterSucessfull);
+      resolve(isRegisterSucessfull)
     })
   }
 
   //ユーザーログアウト
   signOutAccount = async () => {
-    let isSignOut = false;
+    let isSignOut = false
     await signOut(auth).then(() => {
-      isSignOut = true;
+      isSignOut = true
     })
     return new Promise((resolve) => {
-      resolve(isSignOut);
+      resolve(isSignOut)
     })
   }
 }
