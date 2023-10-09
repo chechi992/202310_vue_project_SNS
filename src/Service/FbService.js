@@ -1,10 +1,14 @@
 import { addDoc, collection } from "firebase/firestore"
 import { db } from "../firebaseConfig"
-import { createUserWithEmailAndPassword } from "firebase/auth"
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth"
 import { auth } from "../firebaseConfig"
 
 export class FbService {
-  //ユーザー登録
+  /**
+   * ユーザー登録
+   * @param userInfo 対象UID，名前，メール，パスワード
+   * @returns 登録結果：true，false
+   */
   registerAccount = async (userInfo) => {
     let isRegisterSucessfull = false;
     await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
@@ -31,6 +35,17 @@ export class FbService {
       })
     return new Promise((resolve) => {
       resolve(isRegisterSucessfull);
-    });
+    })
+  }
+
+  //ユーザーログアウト
+  signOutAccount = async () => {
+    let isSignOut = false;
+    await signOut(auth).then(() => {
+      isSignOut = true;
+    })
+    return new Promise((resolve) => {
+      resolve(isSignOut);
+    })
   }
 }
