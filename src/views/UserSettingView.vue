@@ -6,17 +6,16 @@
       UserSettingPage
     </h1>
     <button class="text-white" @click="toHomeView">toHomeView</button>
-    <!--  <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
+     <!--  <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
   </div>
-</template>
+</template> 
 
 <script setup>
-import { useRouter } from "vue-router"
+import { useRoute, useRouter } from "vue-router"
 import { onMounted, ref } from "vue"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
 
 const isLoggedIn = ref(false)
-
 let auth
 onMounted(() => {
   auth = getAuth()
@@ -31,6 +30,8 @@ onMounted(() => {
 
 //router初期化
 const router = useRouter()
+const route = useRoute()
+console.log("route", route.params)
 
 /**
  * ホームページへ遷移
@@ -41,3 +42,9 @@ const toHomeView = () => {
 </script>
 
 <style scoped></style>
+
+
+
+
+
+
