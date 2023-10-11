@@ -120,3 +120,29 @@ const countPlus = () => {
   count.value++
 }
 </script>
+
+
+
+<!-- <template>
+  <div>UserSettingPage</div>
+  <button @click="UserSettingPage">UserSettingPage</button>
+</template>
+
+<script setup>
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+console.log("route", route.params);
+
+function UserSettingPage() {
+  router.push({
+    name: "UserSettingPage",
+    params: { user: "taro", age: 33 },
+  });
+}
+</script>
+
+<style scoped>
+</style> -->
+
