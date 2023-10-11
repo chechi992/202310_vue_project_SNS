@@ -2,9 +2,6 @@
   <div class="w-[1250px]  m-auto p-0  flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed ">asdasd</div>
     <div class="w-[850px] h-screen ml-[250px] ">
-      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toLoginView">
-        toLoginPage
-      </button>
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
         toSettingPage
       </button>
@@ -101,12 +98,6 @@ const SignOut = async () => {
   })
 }
 /**
- * ログインページへ遷移
- */
-const toLoginView = () => {
-  router.push({ name: "LoginPage" })
-}
-/**
  * ユーザ設定ページへ遷移
  */
 const toSettingView = () => {
@@ -121,28 +112,4 @@ const countPlus = () => {
 }
 </script>
 
-
-
-<!-- <template>
-  <div>UserSettingPage</div>
-  <button @click="UserSettingPage">UserSettingPage</button>
-</template>
-
-<script setup>
-import { useRouter, useRoute } from "vue-router";
-
-const router = useRouter();
-const route = useRoute();
-console.log("route", route.params);
-
-function UserSettingPage() {
-  router.push({
-    name: "UserSettingPage",
-    params: { user: "taro", age: 33 },
-  });
-}
-</script>
-
-<style scoped>
-</style> -->
 
