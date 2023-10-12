@@ -196,6 +196,7 @@ app.provide("auth", auth)
 // 在應用程序初始化時監聽用戶的身份狀態變化
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    userProfile.value = user
     // 用戶已經登錄，可以執行相應的處理
     console.log("User is logged in:", user)
 

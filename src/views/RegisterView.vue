@@ -183,10 +183,15 @@ const confirmPassword = computed(() => {
  *アカウント作成メソッド
  */
 const register = async () => {
+  userProfile.value = userData
   console.log("Register start", userInfo.value)
   if (confirmPassword.value && userInfo.value.email !== "") {
     await fbService.registerAccount(userInfo).then((result) => {
       console.log("Register IsSuccessFull?", result)
+
+      /**
+       * 寄送email
+       */
       auth = getAuth()
       // 假設 auth 是通過 getAuth() 取得的 Authentication 實例，user 是成功註冊或登入的用戶對象
       sendEmailVerification(auth.currentUser)

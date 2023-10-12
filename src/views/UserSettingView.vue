@@ -5,15 +5,54 @@
     >
       UserSettingPage
     </h1>
+    <div>
+      <div>
+        <label for="email">User Email: </label>
+      </div>
+      <div>
+        <label for="displayName">User Name: </label>
+      </div>
+    </div>
+    <button class="text-white" @click="updateUserProfile">Update Profile</button>
     <button class="text-white" @click="toHomeView">toHomeView</button>
-     <!--  <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
+    <!--  <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
   </div>
-</template> 
+</template>
 
 <script setup>
 import { useRoute, useRouter } from "vue-router"
-import { onMounted, ref } from "vue"
+
+import { ref, onMounted } from "vue"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
+import { getFirestore, doc, getDoc } from "firebase/firestore"
+
+const userRef = ref(null)
+
+onMounted(() => {
+  const auth = getAuth()
+  const db = getFirestore()
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      userRef.value = user
+      console.log("User UID:", user.uid)
+      const userDocRef = doc(db, "users", user.uid)
+      console.log(userDocRef)
+      const userDoc = await getDoc(userDocRef)
+      console.log(userDoc.data())
+      userRef.value = {
+        ...userRef.value,
+        ...userDoc.data()
+      }
+    }
+  })
+})
+
+const updateUserProfile = async () => {
+  const user = userRef.value
+
+  // 更新用户信息
+}
 
 const isLoggedIn = ref(false)
 let auth
@@ -42,9 +81,3 @@ const toHomeView = () => {
 </script>
 
 <style scoped></style>
-
-
-
-
-
-
