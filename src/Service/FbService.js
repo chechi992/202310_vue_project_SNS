@@ -3,6 +3,7 @@ import { db } from "../firebaseConfig"
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth"
 import { auth } from "../firebaseConfig"
 
+let userProfile
 export class FbService {
   /**
    * ユーザー登録
@@ -14,6 +15,7 @@ export class FbService {
     await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
       .then(async (data) => {
         console.log("successfully registered", data)
+        userProfile.value = data
         //增加userID進去firestore
         const userRef = collection(db, "users")
         const userDoc = {
