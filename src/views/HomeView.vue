@@ -25,7 +25,7 @@
         {{ "CountAdd" }}
       </button>
 
-      <div class="w-[150px] bg-tahiti py-96">asdsadsa</div>
+      <div class="w-[150px] ml-[100px] bg-tahiti py-96">asdsadsa</div>
     </div>
 
     <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
@@ -34,9 +34,22 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { ref, onMounted } from "vue"
+import { ref, onMounted,inject } from "vue"
 import { FbService } from "../Service/FbService"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
+// import { useStore } from 'vuex'
+
+const store = inject("store")
+console.log(store.state.count);
+
+const refValue = inject("refValue")
+console.log(refValue.value);
+
+// const store = useStore()
+// console.log(store.state.count);
+// console.log(store.getters.getCounter);
+// store.commit('increment');
+// console.log(store.state.count);
 
 const count = ref(0)
 //ルーターメソッド初期化

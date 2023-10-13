@@ -38,7 +38,10 @@ export class FbService {
     })
   }
 
-  //ユーザーログアウト
+  /**
+   * ユーザーログアウト
+   * @returns ログアウト結果：true，false
+   */
   signOutAccount = async () => {
     let isSignOut = false
     await signOut(auth).then(() => {
