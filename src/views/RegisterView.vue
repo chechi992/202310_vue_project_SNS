@@ -183,7 +183,6 @@ const confirmPassword = computed(() => {
  *アカウント作成メソッド
  */
 const register = async () => {
-  userProfile.value = userData
   console.log("Register start", userInfo.value)
   if (confirmPassword.value && userInfo.value.email !== "") {
     await fbService.registerAccount(userInfo).then((result) => {

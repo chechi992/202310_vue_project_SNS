@@ -7,27 +7,71 @@
     </h1>
     <div>
       <div>
-        <label for="email">User Email: </label>
+        <label for="email" class="text-white">User Email: {{ userRef.email }}</label>
       </div>
       <div>
-        <label for="displayName">User Name: </label>
+        <label for="displayName" class="text-white">User Name: </label>
+        <span v-if="!editing" class="text-white">{{ userRef.name }}</span>
+        <input v-if="editing" v-model="editedDisplayName" />
+        <button
+          v-if="editing"
+          class="text-white"
+          @click="completeEditing"
+          v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+        >
+          Complete
+        </button>
+        <button
+          v-if="editing"
+          class="text-white"
+          @click="cancelEditing"
+          v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+        >
+          Cancel
+        </button>
       </div>
     </div>
-    <button class="text-white" @click="updateUserProfile">Update Profile</button>
-    <button class="text-white" @click="toHomeView">toHomeView</button>
-    <!--  <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
+    <button
+      class="text-white"
+      v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+      @click="startEditing"
+    >
+      Edit Profile
+    </button>
+    <button
+      class="text-white"
+      v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+      @click="toHomeView"
+    >
+      toHomeView
+    </button>
+    <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
   </div>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from "vue-router"
 
-import { ref, onMounted } from "vue"
+import { ref, onMounted, watch } from "vue"
 import { getAuth, onAuthStateChanged } from "firebase/auth"
-import { getFirestore, doc, getDoc } from "firebase/firestore"
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore"
 
-const userRef = ref(null)
+const userRef = ref({ email: "", name: "" })
+const editing = ref(false)
+const editedDisplayName = ref("")
 
+//カスタマイズ属性
+const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
+//カスタマイズ
+const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => {
+  return (
+    "text-white " + "m-[" + m + "px] " + "p-[" + p + "px] " + "rounded-md " + "bg-[" + bcolor + "] "
+  )
+}
+
+/**
+ * 抓取用戶資料
+ */
 onMounted(() => {
   const auth = getAuth()
   const db = getFirestore()
@@ -44,16 +88,70 @@ onMounted(() => {
         ...userRef.value,
         ...userDoc.data()
       }
+      editedDisplayName.value = userRef.value.name
+    }
+  })
+
+  /**
+   * 監聽editedDisplayName的變化，並確保在取消編輯時退回原始值
+   */
+  watch(editedDisplayName, (newValue, oldValue) => {
+    console.log(oldValue)
+    if (!editing.value && newValue !== userRef.value.name) {
+      editedDisplayName.value = userRef.value.name
     }
   })
 })
 
-const updateUserProfile = async () => {
-  const user = userRef.value
-
-  // 更新用户信息
+/**
+ * 開始編輯，故一開始為true
+ */
+const startEditing = () => {
+  editing.value = true
+  editedDisplayName.value = userRef.value.name
 }
 
+/**
+ * 完成編輯
+ */
+const completeEditing = () => {
+  editing.value = false
+  updateUserProfile()
+}
+/**
+ * 取消編輯
+ */
+const cancelEditing = () => {
+  editing.value = false
+  editedDisplayName.value = userRef.value.name
+}
+
+/**
+ * 更新userprofile
+ */
+const updateUserProfile = async () => {
+  try {
+    const user = userRef.value
+    const db = getFirestore()
+    const userDocRef = doc(db, "users", user.uid)
+
+    await updateDoc(userDocRef, {
+      name: editedDisplayName.value
+    })
+
+    userRef.value = {
+      ...userRef.value,
+      name: editedDisplayName.value
+    }
+    console.log("User profile updated successfully!", editedDisplayName.value)
+  } catch (error) {
+    console.error("Error updating user profile:", error)
+  }
+}
+
+/**
+ * 確認login與否
+ */
 const isLoggedIn = ref(false)
 let auth
 onMounted(() => {
