@@ -19,16 +19,13 @@
         未完成信箱認證
       </button>
 
-      <h3 class="text-white">Count:{{ count }}</h3>
-      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
-        {{ "CountAdd" }}
-      </button>
-
-      <div class="w-[150px] ml-[100px] bg-tahiti py-96">asdsadsa</div>
-    </div>
-
-    <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
+    <h3 class="text-white">Count:{{ count }}</h3>
+    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
+      {{ "CountAdd" }}
+    </button>
+    <div class="w-1/2 bg-tahiti py-96">asdsadsa</div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -45,22 +42,11 @@ const count = ref(0)
 //ルーターメソッド初期化
 const router = useRouter()
 //カスタマイズ属性
-const buttonCustomizaStyleAttribute = ref({ margin: 10, padding: 10, background_color: "#f43f5e" })
+const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
 //カスタマイズ
 const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => {
   return (
-    "text-white " +
-    "m-[" +
-    m +
-    "px] " +
-    "p-[" +
-    p +
-    "px] " +
-    "rounded-md " +
-    "bg-[" +
-    bcolor +
-    "] " +
-    "h-[100px]"
+    "text-white " + "m-[" + m + "px] " + "p-[" + p + "px] " + "rounded-md " + "bg-[" + bcolor + "] "
   )
 }
 
@@ -88,6 +74,7 @@ const signOut = async () => {
     router.push({ name: "LoginPage" })
   })
 }
+
 /**
  * ユーザ設定ページへ遷移
  */

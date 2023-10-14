@@ -136,7 +136,7 @@ const loginInfo = ref({ email: "", pwd: "" })
 //エラーメッセージ
 const errMsg = ref()
 
-const toRegisterView = async () => {
+const toRegisterView = () => {
   router.push({ name: "RegisterPage" })
 }
 
@@ -164,18 +164,17 @@ const toRegisterView = async () => {
 // 在應用程序初始化時監聽用戶的身份狀態變化
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    // 用戶已經登錄，可以執行相應的處理
     console.log("User is logged in:", user)
     store.state.userInfo = {
       email: user.email,
       uid: user.uid,
       isEmailVerified: user.emailVerified
     }
-    // 如果用戶未登錄，可以將其導向登錄頁面
-    router.push({ name: "HomePage" }) // 導向已驗證的頁面
+    //ホームページへ遷移
+    router.push({ name: "HomePage" })
   } else {
-    // 用戶未登錄或登出，可以執行相應的處理
     console.log("User is logged out")
+    //ログインページへ遷移
     router.push({ name: "LoginPage" })
   }
 })
