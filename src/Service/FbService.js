@@ -1,7 +1,7 @@
 import { addDoc, collection } from "firebase/firestore"
-import { db } from "../firebaseConfig"
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth"
-import { auth } from "../firebaseConfig"
+import { db, auth } from "../firebaseConfig"
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { loginErrStrings } from "../globalStrings"
 
 export class FbService {
   /**
@@ -33,9 +33,41 @@ export class FbService {
       .catch((error) => {
         console.error("Register Fail: ", error.code)
       })
-    return new Promise((resolve) => {
-      resolve(isRegisterSucessfull)
-    })
+    return isRegisterSucessfull
+  }
+
+  /**
+ *ログイン際に取ったエラーメッセージを加工する
+ * @param errCode エラーメッセージ
+ */
+  #errMsgResult = (errMsg) => {
+    const errObject = new Map([
+      ["auth/invalid-email", loginErrStrings.INVALIDEMAIL],
+      ["auth/user-not-found", loginErrStrings.NOTFOUNDUSER],
+      ["auth/wrong-password", loginErrStrings.WRONGPWD],
+      ["auth/too-many-requests", loginErrStrings.MANYREQUESTS],
+      ["auth/invalid-login-credentials", loginErrStrings.INVALIDLOGIN]
+    ])
+    return errObject.get(errMsg)
+  }
+
+  /**
+   * ユーザログインする
+   * @param loginInfo インプットemail、Password
+   * @returns ログイン結果
+   */
+  singnInAccount = async (loginInfo) => {
+    let result;
+    await signInWithEmailAndPassword(auth, loginInfo.value.email, loginInfo.value.pwd)
+      .then(() => {
+        console.log("FbService successfully Signin", auth.currentUser)
+        result = auth.currentUser;
+      })
+      .catch((error) => {
+        console.error("Login Fail: ", error.code)
+        result = this.#errMsgResult(error.code);
+      })
+    return result
   }
 
   /**
@@ -47,8 +79,6 @@ export class FbService {
     await signOut(auth).then(() => {
       isSignOut = true
     })
-    return new Promise((resolve) => {
-      resolve(isSignOut)
-    })
+    return isSignOut
   }
 }
