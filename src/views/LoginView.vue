@@ -125,8 +125,6 @@
 <script setup>
 import { useRouter } from "vue-router"
 import { ref } from "vue"
-import { signInWithEmailAndPassword } from "firebase/auth"
-import { loginErrStrings } from "../globalStrings"
 import { useStore } from "vuex"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "../firebaseConfig.js"
@@ -143,28 +141,12 @@ const toRegisterView = async () => {
 }
 
 /**
- *ログイン際に取ったエラーメッセージを加工する
- * @param errCode エラーメッセージ
- */
-const errMsgType = (errCode) => {
-  const errObject = new Map([
-    ["auth/invalid-email", loginErrStrings.INVALIDEMAIL],
-    ["auth/user-not-found", loginErrStrings.NOTFOUNDUSER],
-    ["auth/wrong-password", loginErrStrings.WRONGPWD],
-    ["auth/too-many-requests", loginErrStrings.MANYREQUESTS],
-    ["auth/invalid-login-credentials", loginErrStrings.INVALIDLOGIN]
-  ])
-
-  return errObject.get(errCode)
-}
-
-/**
  * 登入function與error code
  * case無法抓到特定錯誤（需要更改firebase的安全性？）
  */
-const SignIn = () => {
-  signInWithEmailAndPassword(auth, loginInfo.value.email, loginInfo.value.pwd)
-    .then(() => {
+ const SignIn = () => {
+  store.state.fbService.singnInAccount(loginInfo).then((result) => {
+    if (result.uid) {
       console.log("successfully Signin", auth.currentUser)
       store.state.userInfo = {
         email: auth.currentUser.email,
@@ -173,12 +155,10 @@ const SignIn = () => {
       }
       console.log("logined UserInfo", store.state.userInfo)
       router.push({ name: "HomePage" })
-    })
-    .catch((error) => {
-      console.error("Login Fail: ", error.code)
-      errMsg.value = errMsgType(error.code)
-      // Display an error message to the user
-    })
+    } else {
+      errMsg.value = console.error("SignIn Err", result)
+    }
+  })
 }
 
 // 在應用程序初始化時監聽用戶的身份狀態變化
