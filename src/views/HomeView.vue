@@ -1,27 +1,23 @@
 <template>
-  <div class="">
-    <h1
-      class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
-    >
-      HomeView
-    </h1>
-    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toLoginView">
-      toLoginPage
-    </button>
-    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
-      toSettingPage
-    </button>
-    <button
-      v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-      @click="SignOut"
-      v-if="isLoggedIn"
-    >
-      Sign out
-    </button>
-    <!-- 簡單新增未完成信箱的按鈕 -->
-    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" v-if="!isEmailVerified">
-      未完成信箱認證
-    </button>
+  <div class="w-[1250px] m-auto p-0 flex">
+    <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
+      asdasd
+      <customize-loading :isloading="isLoading"/>
+    </div>
+
+    <div class="w-[850px] h-screen ml-[250px]">
+      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
+        toSettingPage
+      </button>
+      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="signOut">
+        Sign out
+      </button>
+      <button
+        v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+        v-if="!store.state.userInfo.emailVerified"
+      >
+        未完成信箱認證
+      </button>
 
     <h3 class="text-white">Count:{{ count }}</h3>
     <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
@@ -29,21 +25,22 @@
     </button>
     <div class="w-1/2 bg-tahiti py-96">asdsadsa</div>
   </div>
+</div>
 </template>
 
 <script setup>
 import { useRouter } from "vue-router"
 import { ref, onMounted } from "vue"
-import { FbService } from "../Service/FbService"
+import { onAuthStateChanged } from "firebase/auth"
+import { useStore } from "vuex"
+import { auth } from "../firebaseConfig"
+import CustomizeLoading from "../components/CustomizeLoading.vue"
 
+const isLoading = ref(true)
+const store = useStore()
 const count = ref(0)
 //ルーターメソッド初期化
 const router = useRouter()
-//Firebaseサービス初期化
-const fbService = new FbService()
-
-// const buttondefaultStyle = "text-white m-[10px] p-[10px] rounded-md bg-[#f43f5e]"
-
 //カスタマイズ属性
 const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
 //カスタマイズ
@@ -53,53 +50,31 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
   )
 }
 
-/**
- * 判斷登入登出與signout
- */
-import { getAuth, onAuthStateChanged } from "firebase/auth"
-
-const isLoggedIn = ref(false)
-
-// 認證使用者驗證email與否
-const isEmailVerified = ref(false)
-
-let auth
-onMounted(() => {
-  auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
-    console.log("user", user)
+onMounted(async () => {
+  await onAuthStateChanged(auth, (user) => {
     if (user) {
-      isLoggedIn.value = true
-      
-      // 檢查用戶是否已經通過身份驗證
-      if (user.emailVerified) {
-        console.log("已完成身份認證")
-        isEmailVerified.value = true
-      } else {
-        console.log("未完成身份認證")
-        isEmailVerified.value = false
+      store.state.userInfo = {
+        email: user.email,
+        uid: user.uid,
+        isEmailVerified: user.emailVerified
       }
-      
+      console.log("User is logged in:", store.state.userInfo)
     } else {
-      isLoggedIn.value = false
+      router.push({ name: "LoginPage" })
     }
+    isLoading.value = false;
   })
 })
 
 /**
  * ユーザログアウト
  */
-const SignOut = async () => {
-  await fbService.signOutAccount().then(() => {
+const signOut = async () => {
+  await store.state.fbService.signOutAccount().then(() => {
     router.push({ name: "LoginPage" })
   })
 }
-/**
- * ログインページへ遷移
- */
-const toLoginView = () => {
-  router.push({ name: "LoginPage" })
-}
+
 /**
  * ユーザ設定ページへ遷移
  */

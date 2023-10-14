@@ -125,13 +125,13 @@
 <script setup>
 import { useRouter } from "vue-router"
 import { ref } from "vue"
-import { auth } from "../firebaseConfig"
+
+import { useStore } from "vuex"
 import { onAuthStateChanged } from "firebase/auth"
-import { FbService } from "../Service/FbService"
+import { auth } from "../firebaseConfig.js"
 
-const fbService = new FbService()
+const store = useStore()
 const router = useRouter()
-
 //インプット:ID, Password
 const loginInfo = ref({ email: "", pwd: "" })
 //エラーメッセージ
@@ -146,13 +146,18 @@ const toRegisterView = () => {
  * case無法抓到特定錯誤（需要更改firebase的安全性？）
  */
 const SignIn = () => {
-  fbService.singnInAccount(loginInfo).then((result) => {
+  store.state.fbService.singnInAccount(loginInfo).then((result) => {
     if (result.uid) {
-      console.log("SignIn successfull", result.uid)
-      //ホームページへ遷移
+      console.log("successfully Signin", auth.currentUser)
+      store.state.userInfo = {
+        email: auth.currentUser.email,
+        uid: auth.currentUser.uid,
+        isEmailVerified: auth.currentUser.emailVerified
+      }
+      console.log("logined UserInfo", store.state.userInfo)
       router.push({ name: "HomePage" })
     } else {
-      console.error("SignIn Err", result)
+      errMsg.value = console.error("SignIn Err", result)
     }
   })
 }
@@ -161,6 +166,11 @@ const SignIn = () => {
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log("User is logged in:", user)
+    store.state.userInfo = {
+      email: user.email,
+      uid: user.uid,
+      isEmailVerified: user.emailVerified
+    }
     //ホームページへ遷移
     router.push({ name: "HomePage" })
   } else {
