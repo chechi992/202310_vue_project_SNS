@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore"
+import { setDoc, doc } from "firebase/firestore"
 import { db } from "../firebaseConfig"
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth"
 import { auth } from "../firebaseConfig"
@@ -15,13 +15,13 @@ export class FbService {
       .then(async (data) => {
         console.log("successfully registered", data)
         //增加userID進去firestore
-        const userRef = collection(db, "users")
+        const userRef = doc(db, "users", data.user.uid)
         const userDoc = {
           UID: data.user.uid,
           name: userInfo.value.name,
           email: userInfo.value.email
         }
-        await addDoc(userRef, userDoc)
+        await setDoc(userRef, userDoc)
           .then(() => {
             isRegisterSucessfull = true
             console.log("User added to Firestore")
@@ -38,10 +38,7 @@ export class FbService {
     })
   }
 
-  /**
-   * ユーザーログアウト
-   * @returns ログアウト結果：true，false
-   */
+  //ユーザーログアウト
   signOutAccount = async () => {
     let isSignOut = false
     await signOut(auth).then(() => {

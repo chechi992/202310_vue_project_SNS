@@ -72,7 +72,7 @@
           <div class="mt-2">
             <input
               placeholder="ユーザ名"
-              v-model="userInfo.name"
+              v-model="registerInfo.name"
               type="text"
               autocomplete="username"
               required=""
@@ -86,7 +86,7 @@
             <div class="bg-red w-[31px] mb-1 rounded text-white text-sm">必須</div>
             <input
               placeholder="メールアドレス"
-              v-model="userInfo.email"
+              v-model="registerInfo.email"
               type="email"
               autocomplete="email"
               required=""
@@ -100,7 +100,7 @@
             <div class="bg-red w-[31px] mb-1 rounded text-white text-sm">必須</div>
             <input
               placeholder="パスワード"
-              v-model="userInfo.pwd"
+              v-model="registerInfo.pwd"
               type="password"
               autocomplete="current-password"
               required=""
@@ -113,7 +113,7 @@
           <div class="mt-2">
             <input
               placeholder="パスワード（確認用）"
-              v-model="userInfo.confirmPwd"
+              v-model="registerInfo.confirmPwd"
               type="password"
               required=""
               class="block w-full p-2 text-white border-0 rounded shadow-sm bg-gray_800 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 focus:text-white sm:text-sm sm:leading-6"
@@ -128,7 +128,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
-          @click="pushToOtherView('LoginPage')"
+          @click="router.push({ name:'LoginPage'})"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -149,14 +149,17 @@
 <script setup>
 import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
-import { FbService } from "../Service/FbService"
+import { useStore } from "vuex"
+import {auth} from "../firebaseConfig"
+import { sendEmailVerification } from "firebase/auth"
 
+//初期化
+const store = useStore()
+const fbService = store.state.fbService;
 //ルーターメソッド初期化
 const router = useRouter()
-//Firebaseサービス初期化
-const fbService = new FbService()
 //登録のアカウトデータ
-const userInfo = ref({
+const registerInfo = ref({
   name: "",
   email: "",
   pwd: "",
@@ -164,30 +167,22 @@ const userInfo = ref({
 })
 
 /**
- * 対象ページへ遷移する
- * pageName 対象ページの名前
- */
-const pushToOtherView = (pageName) => {
-  router.push({ name: pageName })
-}
-
-/**
  * v-showを使って、パスワード二次確認
  * @return true or false
  */
 const confirmPassword = computed(() => {
-  return userInfo.value.pwd !== "" && userInfo.value.pwd === userInfo.value.confirmPwd
+  return registerInfo.value.pwd !== "" && registerInfo.value.pwd === registerInfo.value.confirmPwd
 })
 
 /**
  *アカウント作成メソッド
  */
 const register = async () => {
-  console.log("Register start", userInfo.value)
-  if (confirmPassword.value && userInfo.value.email !== "") {
-    await fbService.registerAccount(userInfo).then((result) => {
+  console.log("Register start", registerInfo.value)
+  if (confirmPassword.value && registerInfo.value.email !== "") {
+    await fbService.registerAccount(registerInfo).then((result) => {
       console.log("Register IsSuccessFull?", result)
-      auth = getAuth()
+
       // 假設 auth 是通過 getAuth() 取得的 Authentication 實例，user 是成功註冊或登入的用戶對象
       sendEmailVerification(auth.currentUser)
         .then(() => {
@@ -198,16 +193,12 @@ const register = async () => {
           // 發送驗證電子郵件時出錯
           console.error("Error sending verification email: ", error)
         })
-      result ? pushToOtherView("HomePage") : console.log("Register Fail")
+        
+      result ? router.push({ name:"HomePage"}) : console.log("Register Fail")
     })
   }
 }
 
-/**
- * 寄電子郵件
- */
-let auth
-import { getAuth, sendEmailVerification } from "firebase/auth"
 </script>
 
 <style scoped lang="scss">

@@ -71,7 +71,7 @@
           <div class="mt-2">
             <input
               placeholder="メールアドレス"
-              v-model="userInfo.email"
+              v-model="loginInfo.email"
               type="email"
               autocomplete="email"
               required=""
@@ -84,7 +84,7 @@
           <div class="mt-2">
             <input
               placeholder="パスワード"
-              v-model="userInfo.pwd"
+              v-model="loginInfo.pwd"
               name="password"
               type="password"
               autocomplete="current-password"
@@ -125,22 +125,37 @@
 <script setup>
 import { useRouter } from "vue-router"
 import { ref } from "vue"
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { loginErrStrings } from "../globalStrings"
+import { useStore } from "vuex"
+import { onAuthStateChanged } from "firebase/auth"
+import { auth } from "../firebaseConfig.js"
 
+const store = useStore()
 const router = useRouter()
-//登録のアカウトデータ
-const userInfo = ref({
-  email: "",
-  pwd: ""
-})
-
-/**
- * 錯誤資訊
- */
+//インプット:ID, Password
+const loginInfo = ref({ email: "", pwd: "" })
+//エラーメッセージ
 const errMsg = ref()
 
-const pushToOtherPage = (pageName) => {
-  router.push({ name: pageName })
+const toRegisterView = async () => {
+  router.push({ name: "RegisterPage" })
+}
+
+/**
+ *ログイン際に取ったエラーメッセージを加工する
+ * @param errCode エラーメッセージ
+ */
+const errMsgType = (errCode) => {
+  const errObject = new Map([
+    ["auth/invalid-email", loginErrStrings.INVALIDEMAIL],
+    ["auth/user-not-found", loginErrStrings.NOTFOUNDUSER],
+    ["auth/wrong-password", loginErrStrings.WRONGPWD],
+    ["auth/too-many-requests", loginErrStrings.MANYREQUESTS],
+    ["auth/invalid-login-credentials", loginErrStrings.INVALIDLOGIN]
+  ])
+
+  return errObject.get(errCode)
 }
 
 /**
@@ -148,48 +163,34 @@ const pushToOtherPage = (pageName) => {
  * case無法抓到特定錯誤（需要更改firebase的安全性？）
  */
 const SignIn = () => {
-  const auth = getAuth()
-  signInWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-    .then((data) => {
-      console.log("successfully Signin", auth.currentUser, data)
-      pushToOtherPage("HomePage")
+  signInWithEmailAndPassword(auth, loginInfo.value.email, loginInfo.value.pwd)
+    .then(() => {
+      console.log("successfully Signin", auth.currentUser)
+      store.state.userInfo = {
+        email: auth.currentUser.email,
+        uid: auth.currentUser.uid,
+        isEmailVerified: auth.currentUser.emailVerified
+      }
+      console.log("logined UserInfo", store.state.userInfo)
+      router.push({ name: "HomePage" })
     })
     .catch((error) => {
       console.error("Login Fail: ", error.code)
-      switch (error.code) {
-        case "auth/invalid-email":
-          errMsg.value = "Invalid email"
-          break
-        case "auth/user-not-found":
-          errMsg.value = "No account with that email was found"
-          break
-        case "auth/wrong-password":
-          errMsg.value = "Incorrect password"
-          break
-        case "auth/too-many-requests":
-          errMsg.value = "too-many-requests"
-          break
-        default:
-          errMsg.value = "Email or password was incorrect"
-          break
-      }
+      errMsg.value = errMsgType(error.code)
       // Display an error message to the user
     })
 }
-
-/**
- * 驗證使用者是否是登入狀態
- */
-import { onAuthStateChanged } from "firebase/auth"
-import { auth } from "../firebaseConfig.js" // 你的 Firebase auth 實例
-
 
 // 在應用程序初始化時監聽用戶的身份狀態變化
 onAuthStateChanged(auth, (user) => {
   if (user) {
     // 用戶已經登錄，可以執行相應的處理
     console.log("User is logged in:", user)
-
+    store.state.userInfo = {
+      email: user.email,
+      uid: user.uid,
+      isEmailVerified: user.emailVerified
+    }
     // 如果用戶未登錄，可以將其導向登錄頁面
     router.push({ name: "HomePage" }) // 導向已驗證的頁面
   } else {
@@ -198,10 +199,6 @@ onAuthStateChanged(auth, (user) => {
     router.push({ name: "LoginPage" })
   }
 })
-
-const toRegisterView = async () => {
-  pushToOtherPage("RegisterPage")
-}
 </script>
 
 <style scoped lang="scss">
