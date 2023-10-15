@@ -2,7 +2,7 @@
   <div class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
       asdasd
-      <customize-loading :isloading="isLoading"/>
+      <customize-loading :isloading="isLoading" />
     </div>
 
     <div class="w-[850px] h-screen ml-[250px]">
@@ -19,13 +19,13 @@
         未完成信箱認證
       </button>
 
-    <h3 class="text-white">Count:{{ count }}</h3>
-    <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
-      {{ "CountAdd" }}
-    </button>
-    <div class="w-1/2 bg-tahiti py-96">asdsadsa</div>
+      <h3 class="text-white">Count:{{ count }}</h3>
+      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
+        {{ "CountAdd" }}
+      </button>
+      <div class="w-1/2 bg-tahiti py-96">asdsadsa</div>
+    </div>
   </div>
-</div>
 </template>
 
 <script setup>
@@ -62,7 +62,7 @@ onMounted(async () => {
     } else {
       router.push({ name: "LoginPage" })
     }
-    isLoading.value = false;
+    isLoading.value = false
   })
 })
 
@@ -89,5 +89,3 @@ const countPlus = () => {
   count.value++
 }
 </script>
-
-
