@@ -89,9 +89,4 @@ const authStateChanged = () => {
   })
 }
 
-
-
-
-
-
 export default router

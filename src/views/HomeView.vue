@@ -1,6 +1,8 @@
 <template>
-
-  <div class="w-[1250px] m-auto p-0 flex">
+ <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center" >
+    <customize-loading/>
+  </div>
+  <div  v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">asdasd</div>
 
     <div class="w-[850px] h-screen ml-[250px]">
@@ -30,15 +32,18 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router"
-import { ref, onMounted } from "vue"
 import { useStore } from "vuex"
+import { ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
 import { indexUserInfo } from "../router/index"
+import CustomizeLoading from "../components/CustomizeLoading.vue"
 
-const store = useStore()
-const count = ref(0)
 //ルーターメソッド初期化
 const router = useRouter()
+const store = useStore()
+const count = ref(0)
+//ロディングフラグ
+const isLoading = ref(true)
 //カスタマイズ属性
 const buttonCustomizaStyleAttribute = ref({ margin: 10, padding: 10, background_color: "#f43f5e" })
 //カスタマイズ
@@ -50,6 +55,7 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
 onMounted(() => {
   store.state.userInfo = indexUserInfo;
   console.log("User is logined:", store.state.userInfo)
+  isLoading.value = false;
 })
 
 /**
