@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
+    <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center" >
+    <customize-loading/>
+  </div>
+  <div v-show="!isLoading" class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h1
         class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
@@ -124,10 +127,9 @@
 
 <script setup>
 import { useRouter } from "vue-router"
-import { ref } from "vue"
 import { useStore } from "vuex"
-import { onAuthStateChanged } from "firebase/auth"
-import { auth } from "../firebaseConfig.js"
+import { ref } from "vue"
+import CustomizeLoading from "../components/CustomizeLoading.vue"
 
 const store = useStore()
 const router = useRouter()
@@ -135,49 +137,32 @@ const router = useRouter()
 const loginInfo = ref({ email: "", pwd: "" })
 //エラーメッセージ
 const errMsg = ref()
+//ロディングフラグ
+const isLoading = ref(false)
 
+/**
+ * 登録画面遷移へ
+ */
 const toRegisterView = () => {
   router.push({ name: "RegisterPage" })
 }
 
 /**
- * 登入function與error code
- * case無法抓到特定錯誤（需要更改firebase的安全性？）
+ * ログイン処理する
  */
- const SignIn = () => {
-  store.state.fbService.singnInAccount(loginInfo).then((result) => {
+const SignIn = () => {
+  isLoading.value = true;
+  store.state.fbService.singnInAccount(loginInfo)
+  .then((result) => {
     if (result.uid) {
-      console.log("successfully Signin", auth.currentUser)
-      store.state.userInfo = {
-        email: auth.currentUser.email,
-        uid: auth.currentUser.uid,
-        isEmailVerified: auth.currentUser.emailVerified
-      }
-      console.log("logined UserInfo", store.state.userInfo)
       router.push({ name: "HomePage" })
     } else {
-      errMsg.value = console.error("SignIn Err", result)
+      errMsg.value = result;
+      console.error("SignIn Err", result)
+      isLoading.value = false;
     }
   })
 }
-
-// 在應用程序初始化時監聽用戶的身份狀態變化
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    console.log("User is logged in:", user)
-    store.state.userInfo = {
-      email: user.email,
-      uid: user.uid,
-      isEmailVerified: user.emailVerified
-    }
-    //ホームページへ遷移
-    router.push({ name: "HomePage" })
-  } else {
-    console.log("User is logged out")
-    //ログインページへ遷移
-    router.push({ name: "LoginPage" })
-  }
-})
 </script>
 
 <style scoped lang="scss">

@@ -53,8 +53,8 @@ export class FbService {
 
   /**
    * ユーザログインする
-   * @param loginInfo インプットemail、Password
-   * @returns ログイン結果
+   * @param loginInfo インプット：email、Password
+   * @returns ログイン結果：ユーザー情報、エラーメッセージ
    */
   singnInAccount = async (loginInfo) => {
     let result;
