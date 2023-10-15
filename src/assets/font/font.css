@@ -1,0 +1,14 @@
+@Baloo {
+    font-family:'Baloo';
+    src:url('./Baloo-Regular.ttf');
+}
+
+@Forum {
+    font-family:'Forum';
+    src:url('./Forum-Regular.ttf');
+}
+
+@TitanOne {
+    font-family:'TitanOne';
+    src:url('./TitanOne-Regular.ttf')
+}
