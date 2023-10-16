@@ -12,10 +12,7 @@
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="signOut">
         Sign out
       </button>
-      <button
-        v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-        v-if="!store.state.userInfo.emailVerified"
-      >
+      <button class="btn" v-if="!store.state.userInfo.emailVerified">
         未完成信箱認證
       </button>
 
@@ -81,5 +78,11 @@ const countPlus = () => {
   count.value++
 }
 </script>
+
+<style scoped>
+.btn {
+  @apply font-bold py-2 px-4 rounded bg-["#f43f5e"];
+}
+</style>
 
 
