@@ -12,7 +12,7 @@
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="signOut">
         Sign out
       </button>
-      <button class="btn" v-if="!store.state.userInfo.emailVerified">
+      <button class="btn" :style="{}" v-if="!store.state.userInfo.emailVerified">
         未完成信箱認證
       </button>
 
