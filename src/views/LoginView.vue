@@ -1,6 +1,6 @@
 <template>
     <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center" >
-    <customize-loading/>
+    <customize-loading :size="150" :borderSize="30"/>
   </div>
   <div v-show="!isLoading" class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">

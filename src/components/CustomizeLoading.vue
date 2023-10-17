@@ -1,7 +1,14 @@
 <template>
   <div>
     <loading :active="true">
-      <div class="loadingio-spinner-rolling-gsde32607o6">
+      <div
+        class="loadingio-spinner-rolling-gsde32607o6"
+        :style="{
+          '--loadingsize': size + 'px',
+          '--bordersize': borderSize + 'px',
+          '--color': color
+        }"
+      >
         <div class="ldio-i08mbc5ayj8">
           <div></div>
         </div>
@@ -12,6 +19,23 @@
   
 <script setup>
 import Loading from "vue-loading-overlay"
+import { ref, defineProps } from "vue"
+
+const props = defineProps({
+  size: {
+    type: Number
+  },
+  borderSize: {
+    type: Number
+  },
+  color: {
+    type: String
+  }
+})
+
+const size = ref(props.size ? props.size : 17)
+const borderSize = ref(props.borderSize ? props.borderSize : 50)
+const color = ref(props.color ? props.color : "#93a1e9")
 </script>
 
 
@@ -26,9 +50,9 @@ import Loading from "vue-loading-overlay"
 }
 .ldio-i08mbc5ayj8 div {
   position: absolute;
-  width: 130px;
-  height: 130px;
-  border: 17px solid #93a1e9;
+  width: var(--loadingsize);
+  height: var(--loadingsize);
+  border: var(--bordersize) solid var(--color);
   border-top-color: transparent;
   border-radius: 50%;
 }
