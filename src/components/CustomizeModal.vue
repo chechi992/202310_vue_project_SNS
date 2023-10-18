@@ -1,31 +1,34 @@
 <template>
- <div id="modal">
+  <div v-if="props.modalIsOpen" id="modal">
     <div id="modal-content" class="modal">
-      <p id="modal-message" class="modal__message">{{ message }}</p>
+      <button @click="showModal" class="close">X</button>
+      <ModalBody />
     </div>
     <div id="modal-overlay"></div>
   </div>
 </template>
     
   <script setup>
-import { ref, defineProps} from "vue"
-
-
-
-
+import { defineProps, computed, defineAsyncComponent } from "vue"
+const emit = defineEmits(["showModalChange"])
 const props = defineProps({
-  message: {
-    type: String
+  modalIsOpen: {
+    type: Boolean
   },
+  bodyPath: {
+    type: String
+  }
 })
+const ModalBody = computed(() => defineAsyncComponent(() => import(props.bodyPath)))
 
-const message = ref(props.message)
-
+const showModal = () => {
+  emit("showModalChange")
+}
 </script>
   
 <style scoped>
 .modal {
-  padding: 10px 20px;
+  padding: 10px;
   background: #faebd7;
   z-index: 2;
   display: block;
@@ -36,10 +39,10 @@ const message = ref(props.message)
   transform: translate(-50%, -50%);
   border-radius: 10px;
 }
-
-.modal__message {
-  margin-top: 10px;
-  color: black;
+.close{
+  position: absolute;
+  top:0px;
+  right: 10px;
 }
 
 #modal-overlay {
@@ -50,6 +53,6 @@ const message = ref(props.message)
   left: 0;
   width: 100%;
   height: 120%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(43, 43, 43, 0.2);
 }
 </style>

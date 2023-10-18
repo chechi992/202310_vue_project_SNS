@@ -33,8 +33,8 @@ const props = defineProps({
   }
 })
 
-const size = ref(props.size ? props.size : 17)
-const borderSize = ref(props.borderSize ? props.borderSize : 50)
+const size = ref(props.size ? props.size : 50)
+const borderSize = ref(props.borderSize ? props.borderSize : 17)
 const color = ref(props.color ? props.color : "#93a1e9")
 </script>
 
