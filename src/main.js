@@ -14,7 +14,7 @@ import { FbService } from "../src/Service/FbService"
 const store = createStore({
   state: {
     userInfo: { uid: "", disPlayName: "", email: "", isEmailVerified: false },
-    fbService: new FbService()
+    fbService: new FbService(),
   },
   getters: {
   },
