@@ -32,6 +32,7 @@
   </div>
   <customize-modal
     :modalIsOpen="modalIsOpen"
+    :closeButtonNeed="true"
     @showModalChange="showModal"
     bodyPath="../components/modalBodys/ModalBodySample.vue"
   />

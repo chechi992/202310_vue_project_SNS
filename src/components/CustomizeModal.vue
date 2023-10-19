@@ -1,25 +1,30 @@
 <template>
   <div v-if="props.modalIsOpen" id="modal">
     <div id="modal-content" class="modal">
-      <button @click="showModal" class="close">X</button>
+      <button v-if="closeButtonNeed" @click="showModal" class="close">X</button>
       <ModalBody />
     </div>
-    <div id="modal-overlay"></div>
+    <div ref="sample" id="modal-overlay"></div>
   </div>
 </template>
     
   <script setup>
-import { defineProps, computed, defineAsyncComponent } from "vue"
+import { computed, defineAsyncComponent,ref,onMounted } from "vue"
 const emit = defineEmits(["showModalChange"])
 const props = defineProps({
-  modalIsOpen: {
-    type: Boolean
-  },
-  bodyPath: {
-    type: String
-  }
+  modalIsOpen:Boolean,
+  closeButtonNeed: Boolean,
+  bodyPath: String
 })
-const ModalBody = computed(() => defineAsyncComponent(() => import(props.bodyPath)))
+const sample = ref(null)
+onMounted(() => {
+      console.log(sample.value);
+    })
+
+
+const ModalBody = computed(() =>
+  defineAsyncComponent(() => import(/* @vite-ignore */ props.bodyPath))
+)
 
 const showModal = () => {
   emit("showModalChange")
@@ -39,9 +44,9 @@ const showModal = () => {
   transform: translate(-50%, -50%);
   border-radius: 10px;
 }
-.close{
+.close {
   position: absolute;
-  top:0px;
+  top: 0px;
   right: 10px;
 }
 

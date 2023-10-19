@@ -19,7 +19,7 @@
   
 <script setup>
 import Loading from "vue-loading-overlay"
-import { ref, defineProps } from "vue"
+import { ref } from "vue"
 
 const props = defineProps({
   size: {
