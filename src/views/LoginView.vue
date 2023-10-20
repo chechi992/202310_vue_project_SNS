@@ -129,7 +129,7 @@
 import { useRouter } from "vue-router"
 import { useStore } from "vuex"
 import { ref } from "vue"
-import CustomizeLoading from "../components/CustomizeLoading.vue"
+import CustomizeLoading from "../components/tools/CustomizeLoading.vue"
 
 const store = useStore()
 const router = useRouter()
