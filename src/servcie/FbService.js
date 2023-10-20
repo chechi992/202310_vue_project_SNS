@@ -25,14 +25,7 @@ export class FbService {
         await setDoc(userRef, userDoc)
           .then(() => {
             isRegisterSucessfull = true
-            console.log("User added to Firestore")
           })
-          .catch((error) => {
-            console.error("Error adding user to Firestore:", error)
-          })
-      })
-      .catch((error) => {
-        console.error("FbService Register Fail: ", error.code)
       })
       console.log("FbService Register end", isRegisterSucessfull);
     return isRegisterSucessfull
@@ -42,7 +35,7 @@ export class FbService {
  *ログイン際に取ったエラーメッセージを加工する
  * @param errCode エラーメッセージ
  */
-  #errMsgResult = (errMsg) => {
+  #errMsgResult = (errMsg) => { 
     const errObject = new Map([
       ["auth/invalid-email", loginErrStrings.INVALIDEMAIL],
       ["auth/user-not-found", loginErrStrings.NOTFOUNDUSER],

@@ -34,7 +34,7 @@
     :modalIsOpen="modalIsOpen"
     :closeButtonNeed="true"
     @showModalChange="showModal"
-    bodyPath="../components/modalBodys/ModalBodySample.vue"
+    bodyPath="../components/Modalbodys/ModalBodySample.vue"
   />
 </template>
 
@@ -43,8 +43,8 @@ import { useStore } from "vuex"
 import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import { indexUserInfo } from "../router/index"
-import CustomizeLoading from "../components/tools/CustomizeLoading.vue"
-import CustomizeModal from "../components/tools/CustomizeModal.vue"
+import CustomizeLoading from "../components/CustomizeLoading.vue"
+import CustomizeModal from "../components/CustomizeModal.vue"
 
 //ルーターメソッド初期化
 const router = useRouter()
