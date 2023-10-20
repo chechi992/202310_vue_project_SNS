@@ -69,43 +69,66 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
   )
 }
 
+import { useStore } from "vuex"
+import { indexUserInfo } from "../router/index"
+
+const store = useStore()
 /**
  * 抓取用戶資料
  */
+onMounted(() => {
+  store.state.userInfo = indexUserInfo
+  console.log("User is logined:", store.state.userInfo)
+  console.log(indexUserInfo)
+})
+
 onMounted(() => {
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       userRef.value = user
       console.log("User UID:", user.uid)
+
       const userDocRef = doc(db, "users", user.uid)
       console.log(userDocRef)
+
       const userDoc = await getDoc(userDocRef)
       console.log(userDoc.data())
+
       userRef.value = {
         ...userRef.value,
         ...userDoc.data()
       }
-      editedDisplayName.value = userRef.value.name
+
+      if (userDoc.exists()) {
+        const userData = userDoc.data()
+        // 將名字添加到 indexUserInfo
+        // 更新名字
+        indexUserInfo.disPlayName = userData.name
+        console.log(indexUserInfo)
+        // 更新 editedDisplayName
+        editedDisplayName.value = indexUserInfo.disPlayName
+      }
     }
   })
-
-  /**
-   * 監聽editedDisplayName的變化，並確保在取消編輯時退回原始值
-   */
+  // 在需要使用 indexUserInfo 的地方，可以直接訪問它
   watch(editedDisplayName, (newValue, oldValue) => {
     console.log(oldValue)
     if (!editing.value && newValue !== userRef.value.name) {
-      editedDisplayName.value = userRef.value.name
+      editedDisplayName.value = indexUserInfo.disPlayName // 這裡可以這樣換嗎？
     }
   })
 })
+
+/**
+ * 監聽editedDisplayName的變化，並確保在取消編輯時退回原始值
+ */
 
 /**
  * 開始編輯，故一開始為true
  */
 const startEditing = () => {
   editing.value = true
-  editedDisplayName.value = userRef.value.name
+  editedDisplayName.value = indexUserInfo.disPlayName
 }
 
 /**
@@ -120,7 +143,7 @@ const completeEditing = () => {
  */
 const cancelEditing = () => {
   editing.value = false
-  editedDisplayName.value = userRef.value.name
+  editedDisplayName.value = indexUserInfo.disPlayName
 }
 
 /**
@@ -130,6 +153,9 @@ const updateUserProfile = async () => {
   try {
     const user = userRef.value
     const userDocRef = doc(db, "users", user.uid)
+
+    // 將 indexUserInfo.name 設置為新的名稱
+    indexUserInfo.disPlayName = editedDisplayName.value
 
     await updateDoc(userDocRef, {
       name: editedDisplayName.value
