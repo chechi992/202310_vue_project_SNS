@@ -52,10 +52,15 @@ router.beforeEach(async (to, from, next) => {
           }
         }
         if (!result) {
-          console.log("Not Found Account");
-          //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
-          if (to.fullPath !== from.fullPath) {
+          if (to.fullPath ==="/Register" && from.fullPath === "/" ||
+           to.fullPath ==="/" && from.fullPath === "/Register") {
+            console.log("登録画面");
+          }
+           //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
+          else if (to.fullPath !== from.fullPath) {
+            console.log("Not Found Account");
             router.push({ name: "LoginPage" })
+            
           }
         }
       })
