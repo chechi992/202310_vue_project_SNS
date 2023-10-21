@@ -50,11 +50,13 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from "vue-router"
+import { useRoute,} from "vue-router"
 import { ref, onMounted, watch } from "vue"
 import { onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc, updateDoc } from "firebase/firestore"
 import { auth, db } from "../firebaseConfig"
+import store from "../store"
+import router from "../router"
 
 const userRef = ref({ email: "", name: "" })
 const editing = ref(false)
@@ -69,17 +71,14 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
   )
 }
 
-import { useStore } from "vuex"
-import { indexUserInfo } from "../router/index"
 
-const store = useStore()
+
+
 /**
  * 抓取用戶資料
  */
 onMounted(() => {
-  store.state.userInfo = indexUserInfo
-  console.log("User is logined:", store.state.userInfo)
-  console.log(indexUserInfo)
+   console.log("User is logined:", store.state.userInfo)
 })
 
 onMounted(() => {
@@ -103,10 +102,10 @@ onMounted(() => {
         const userData = userDoc.data()
         // 將名字添加到 indexUserInfo
         // 更新名字
-        indexUserInfo.disPlayName = userData.name
-        console.log(indexUserInfo)
+        store.state.userInfo.disPlayName = userData.name
+        console.log(store.state.userInfo)
         // 更新 editedDisplayName
-        editedDisplayName.value = indexUserInfo.disPlayName
+        editedDisplayName.value = store.state.userInfo.disPlayName
       }
     }
   })
@@ -114,7 +113,7 @@ onMounted(() => {
   watch(editedDisplayName, (newValue, oldValue) => {
     console.log(oldValue)
     if (!editing.value && newValue !== userRef.value.name) {
-      editedDisplayName.value = indexUserInfo.disPlayName // 這裡可以這樣換嗎？
+      editedDisplayName.value = store.state.userInfo.disPlayName // 這裡可以這樣換嗎？
     }
   })
 })
@@ -128,7 +127,7 @@ onMounted(() => {
  */
 const startEditing = () => {
   editing.value = true
-  editedDisplayName.value = indexUserInfo.disPlayName
+  editedDisplayName.value = store.state.userInfo.disPlayName
 }
 
 /**
@@ -143,7 +142,7 @@ const completeEditing = () => {
  */
 const cancelEditing = () => {
   editing.value = false
-  editedDisplayName.value = indexUserInfo.disPlayName
+  editedDisplayName.value = store.state.userInfo.disPlayName
 }
 
 /**
@@ -155,7 +154,7 @@ const updateUserProfile = async () => {
     const userDocRef = doc(db, "users", user.uid)
 
     // 將 indexUserInfo.name 設置為新的名稱
-    indexUserInfo.disPlayName = editedDisplayName.value
+    store.state.userInfo.disPlayName = editedDisplayName.value
 
     await updateDoc(userDocRef, {
       name: editedDisplayName.value
@@ -187,7 +186,7 @@ onMounted(() => {
 })
 
 //router初期化
-const router = useRouter()
+
 const route = useRoute()
 console.log("route", route.params)
 

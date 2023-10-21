@@ -148,16 +148,12 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import { useRouter } from "vue-router"
-import { useStore } from "vuex"
+import store from "../store"
+import router from "../router"
 import { auth } from "../firebaseConfig"
 import { sendEmailVerification } from "firebase/auth"
 
-//初期化
-const store = useStore()
 const fbService = store.state.fbService
-//ルーターメソッド初期化
-const router = useRouter()
 //登録のアカウトデータ
 const registerInfo = ref({
   name: "",

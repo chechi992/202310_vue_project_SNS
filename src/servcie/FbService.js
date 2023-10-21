@@ -12,21 +12,22 @@ export class FbService {
   registerAccount = async (userInfo) => {
     console.log("FbService Register start", userInfo)
     let isRegisterSucessfull = false
-    await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-      .then(async (data) => {
-        console.log("FbService Register successfull", data)
-        //增加userID進去firestore
-        const userRef = doc(db, "users", data.user.uid)
-        const userDoc = {
-          UID: data.user.uid,
-          name: userInfo.value.name,
-          email: userInfo.value.email
-        }
-        await setDoc(userRef, userDoc)
-          .then(() => {
-            isRegisterSucessfull = true
-          })
-      })
+    const registerResult = await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
+
+
+      console.log("FbService Register successfull", registerResult)
+      //增加userID進去firestore
+      const userRef = doc(db, "users", registerResult.user.uid)
+      const userDoc = {
+        UID: registerResult.user.uid,
+        name: userInfo.value.name,
+        email: userInfo.value.email
+      }
+      await setDoc(userRef, userDoc)
+        .then(() => {
+          console.log("asdasdsad");
+          isRegisterSucessfull = true
+        })
     console.log("FbService Register end", isRegisterSucessfull)
     return isRegisterSucessfull
   }
