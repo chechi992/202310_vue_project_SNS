@@ -151,7 +151,7 @@ import { ref, computed } from "vue"
 import store from "../store"
 import router from "../router"
 
-const fbService = store.state.fbService
+const AuthService = store.state.AuthService
 //登録のアカウトデータ
 const registerInfo = ref({
   name: "",
@@ -175,9 +175,9 @@ const register = async () => {
   console.log("Register start", registerInfo.value)
   if (confirmPassword.value && registerInfo.value.email !== "") {
     try {
-      const registerResult = await fbService.registerAccount(registerInfo)
+      const registerResult = await AuthService.registerAccount(registerInfo)
       if (registerResult !== false) {
-        await fbService.sendVerificationMail(registerResult)
+        await AuthService.sendVerificationMail(registerResult)
         router.push({ name: "HomePage" })
       }
     } catch (e) {

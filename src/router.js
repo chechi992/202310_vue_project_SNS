@@ -70,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
  * @returns ある場合ユーザ情報返す、ない場合false
  */
 const authStateChanged = () => {
-  let result = { uid: "", disPlayName: "", email: "", isEmailVerified: false }
+  let result = { uid: "", name: "", email: "", isEmailVerified: false }
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
       if (user)

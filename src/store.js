@@ -1,10 +1,12 @@
 import { createStore } from 'vuex'
+import { AuthService } from "./servcie/AuthService"
 import { FbService } from "./servcie/FbService"
 
 const store = createStore({
     state: {
-        userInfo: { uid: "", disPlayName: "", email: "", isEmailVerified: false },
-        fbService: new FbService(),
+        userInfo: { uid: "", name: "", email: "", isEmailVerified: false },
+        AuthService: new AuthService(),
+        FbService: new FbService(),
     },
     mutations: {
         setUserInfo(state, user) {

@@ -151,7 +151,7 @@ const toRegisterView = () => {
  */
 const SignIn = () => {
   isLoading.value = true;
-  store.state.fbService.singnInAccount(loginInfo)
+  store.state.AuthService.singnInAccount(loginInfo)
   .then((result) => {
     if (result.uid) {
       router.push({ name: "HomePage" })

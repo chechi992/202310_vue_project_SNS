@@ -69,7 +69,7 @@ const showModal = () => {
  * ユーザログアウト
  */
 const signOut = async () => {
-  await store.state.fbService.signOutAccount().then(() => {
+  await store.state.AuthService.signOutAccount().then(() => {
     router.push({ name: "LoginPage" })
   })
 }
