@@ -50,14 +50,12 @@ router.beforeEach(async (to, from, next) => {
             router.push({ name: "HomePage" })
         }
         if (!result) {
-          //例外
+          //例外：登録画面へ遷移
           if (to.fullPath === "/Register" || from.fullPath === "/Register")
             console.log("登録画面");
           //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
-          else if (to.fullPath === "/" && from.fullPath !== "/") {
+          else if (to.fullPath === "/" && from.fullPath !== "/")
             router.push({ name: "LoginPage" })
-            console.log("Not Found Account");
-          }
         }
       })
   }
@@ -75,9 +73,9 @@ const authStateChanged = () => {
   let result = { uid: "", disPlayName: "", email: "", isEmailVerified: false }
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+      if (user)
         result = { ...result, ...user }
-      } else
+      else
         result = false
       resolve(result)
     })

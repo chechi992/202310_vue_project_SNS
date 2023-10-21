@@ -150,8 +150,6 @@
 import { ref, computed } from "vue"
 import store from "../store"
 import router from "../router"
-import { auth } from "../firebaseConfig"
-import { sendEmailVerification } from "firebase/auth"
 
 const fbService = store.state.fbService
 //登録のアカウトデータ
@@ -177,18 +175,11 @@ const register = async () => {
   console.log("Register start", registerInfo.value)
   if (confirmPassword.value && registerInfo.value.email !== "") {
     try {
-      await fbService.registerAccount(registerInfo).then((result) => {
-        console.log("Register IsSuccessFull?", result)
-
-        // 假設 auth 是通過 getAuth() 取得的 Authentication 實例，user 是成功註冊或登入的用戶對象
-        sendEmailVerification(auth.currentUser)
-          .then(() => {
-            // 驗證電子郵件已成功發送
-            console.log("Verification email sent!")
-          })
-
-        result ? router.push({ name: "HomePage" }) : console.log("Register Fail")
-      })
+      const registerResult = await fbService.registerAccount(registerInfo)
+      if (registerResult !== false) {
+        await fbService.sendVerificationMail(registerResult)
+        router.push({ name: "HomePage" })
+      }
     } catch (e) {
       console.error("error", e)
     }

@@ -1,21 +1,20 @@
 import { setDoc, doc } from "firebase/firestore"
 import { db, auth } from "../firebaseConfig"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth"
+import { createUserWithEmailAndPassword, sendEmailVerification,
+  signInWithEmailAndPassword, signOut } from "firebase/auth"
 import { loginErrStrings } from "../globalStrings"
 
 export class FbService {
   /**
    * ユーザー登録
    * @param userInfo 対象UID，名前，メール，パスワード
-   * @returns 登録結果：true，false
+   * @returns 登録結果 ユーザ情報，false
    */
   registerAccount = async (userInfo) => {
     console.log("FbService Register start", userInfo)
     let isRegisterSucessfull = false
     const registerResult = await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-
-
-      console.log("FbService Register successfull", registerResult)
+      console.log("FbService Register successfull", registerResult.user)
       //增加userID進去firestore
       const userRef = doc(db, "users", registerResult.user.uid)
       const userDoc = {
@@ -25,9 +24,9 @@ export class FbService {
       }
       await setDoc(userRef, userDoc)
         .then(() => {
-          console.log("asdasdsad");
-          isRegisterSucessfull = true
+          isRegisterSucessfull = registerResult.user
         })
+
     console.log("FbService Register end", isRegisterSucessfull)
     return isRegisterSucessfull
   }
@@ -68,7 +67,10 @@ export class FbService {
     return result
   }
 
-  //ユーザーログアウト
+  /**
+   * ユーザーログアウト
+   * @returns true ,false
+   */
   signOutAccount = async () => {
     console.log("FbService signOut start")
     let isSignOut = false
@@ -78,4 +80,17 @@ export class FbService {
     console.log("FbService signOut end", isSignOut)
     return isSignOut
   }
+
+/**
+ * アカウント認証メール送る
+ * @param currentUser ユーザログインした情報（auth.currentUser） 
+ */
+  sendVerificationMail = async (currentUser)=>{
+    sendEmailVerification(currentUser)
+    .then(() => {
+      // 驗證電子郵件已成功發送
+      console.log("Verification email sent!")
+    })
+  }
+ 
 }
