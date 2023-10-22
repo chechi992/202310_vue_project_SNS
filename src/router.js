@@ -37,33 +37,28 @@ const router = createRouter({
 
 //遷移前に処理する(router.push使ったら、触発する)
 router.beforeEach(async (to, from, next) => {
-  console.log("beforeEach to", to);
-  console.log("beforeEach from", from);
+  console.log("beforeEach to", to)
+  console.log("beforeEach from", from)
 
   if (!store.state.userInfo.uid) {
-    await authStateChanged()
-      .then((result) => {
-        if (result.uid) {
-          store.commit("setUserInfo", result);
-          //LoginPageにいて、ユーザログインしてる場合 → HomePageへ遷移
-          if (from.fullPath === "/" && to.fullPath === "/")
-            router.push({ name: "HomePage" })
-        }
-        if (!result) {
-          //例外：登録画面へ遷移
-          if (to.fullPath === "/Register" || from.fullPath === "/Register")
-            console.log("登録画面");
-          //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
-          else if (to.fullPath === "/" && from.fullPath !== "/")
-            router.push({ name: "LoginPage" })
-        }
-      })
+    await authStateChanged().then((result) => {
+      if (result.uid) {
+        store.commit("setUserInfo", result)
+        //LoginPageにいて、ユーザログインしてる場合 → HomePageへ遷移
+        if (from.fullPath === "/" && to.fullPath === "/") router.push({ name: "HomePage" })
+      }
+      if (!result) {
+        //例外：登録画面へ遷移
+        if (to.fullPath === "/Register" || from.fullPath === "/Register") console.log("登録画面")
+        //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
+        else if (to.fullPath !== "/" && from.fullPath === "/") router.push({ name: "LoginPage" })
+      }
+    })
   }
 
   //遷移ためnext()を使用する;
-  next();
+  next()
 })
-
 
 /**
  * ユーザログイン有無確認する(async化になる)
@@ -73,10 +68,8 @@ const authStateChanged = () => {
   let result = { uid: "", name: "", email: "", isEmailVerified: false }
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
-      if (user)
-        result = { ...result, ...user }
-      else
-        result = false
+      if (user) result = { ...result, ...user }
+      else result = false
       resolve(result)
     })
   })

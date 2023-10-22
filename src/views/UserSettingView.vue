@@ -113,12 +113,16 @@ const cancelEditing = () => {
  */
 const updateUserProfile = async () => {
   try {
-    await store.state.FbService.updateDataByDocName("users",store.state.userInfo.uid , editedDisplayName.value)
+    await store.state.FbService.updateDataByDocName(
+      "users",
+      store.state.userInfo.uid,
+      editedDisplayName.value
+    )
     // 將 indexUserInfo.name 設置為新的名稱
 
     let tmpUserInfo = store.state.userInfo
     tmpUserInfo.name = editedDisplayName.value
-    store.commit("setUserInfo", tmpUserInfo);
+    store.commit("setUserInfo", tmpUserInfo)
 
     console.log("User profile updated successfully!", editedDisplayName.value)
   } catch (error) {

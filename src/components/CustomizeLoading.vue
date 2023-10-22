@@ -16,7 +16,7 @@
     </loading>
   </div>
 </template>
-  
+
 <script setup>
 import Loading from "vue-loading-overlay"
 import { ref } from "vue"
@@ -31,7 +31,6 @@ const size = ref(props.size ? props.size : 50)
 const borderSize = ref(props.borderSize ? props.borderSize : 17)
 const color = ref(props.color ? props.color : "#93a1e9")
 </script>
-
 
 <style>
 @keyframes ldio-i08mbc5ayj8 {
@@ -71,4 +70,3 @@ const color = ref(props.color ? props.color : "#93a1e9")
   transform-origin: 0 0; /* see note above */
 }
 </style>
-  
