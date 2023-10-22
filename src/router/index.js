@@ -46,23 +46,21 @@ router.beforeEach(async (to, from, next) => {
     try {
       const result = await authStateChanged()
       if (result.uid) {
-        if (from.fullPath === to.fullPath) {
-          // 使用者已登入且從 LoginPage 到 HomePage，則使用 next("/Home") 將路由導向到名稱為 "Home" 的路由。
-          next("/Home")
+        if (from.fullPath === to.fullPath && to.name !== "Home") {
+          // 使用者已登入且從 LoginPage 到 HomePage，則使用 next({ name: "Home" }) 將路由導向到名稱為 "Home" 的路由。
+          next({ name: "HomePage" })
+        } else if (from.fullPath !== to.fullPath && to.name !== "Login") {
+          // 使用者未登入，則使用 next({ name: "Login" }) 將路由導向到名稱為 "Login" 的路由。
+          next({ name: "LoginPage" })
         } else {
           next() // 繼續原本的導航
         }
       } else {
-        if (from.fullPath !== to.fullPath) {
-          //使用者未登入，則使用 next("/Login") 將路由導向到名稱為 "Login" 的路由。
-          next("/Login")
-        } else {
-          next() // 繼續原本的導航
-        }
+        next() // 繼續原本的導航
       }
     } catch (error) {
       console.error("Error during authentication check:", error)
-      next("/Login") // 錯誤時導航到 LoginPage
+      next({ name: "LoginPage" }) // 錯誤時導航到 LoginPage
     }
   } else {
     // 如果使用者已登入，繼續導航
