@@ -37,8 +37,8 @@ const router = createRouter({
 
 //遷移前に処理する(router.push使ったら、触発する)
 router.beforeEach(async (to, from, next) => {
-  console.log("beforeEach to", to);
-  console.log("beforeEach from", from);
+  console.log("beforeEach to", to)
+  console.log("beforeEach from", from)
 
   if (!store.state.userInfo.uid) {
     await authStateChanged()
@@ -61,9 +61,8 @@ router.beforeEach(async (to, from, next) => {
   }
 
   //遷移ためnext()を使用する;
-  next();
+  next()
 })
-
 
 /**
  * ユーザログイン有無確認する(async化になる)
@@ -73,10 +72,8 @@ const authStateChanged = () => {
   let result = { uid: "", name: "", email: "", isEmailVerified: false }
   return new Promise((resolve) => {
     onAuthStateChanged(auth, (user) => {
-      if (user)
-        result = { ...result, ...user }
-      else
-        result = false
+      if (user) result = { ...result, ...user }
+      else result = false
       resolve(result)
     })
   })
