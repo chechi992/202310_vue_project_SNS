@@ -9,17 +9,14 @@
 </template>
     
   <script setup>
-import { computed, defineAsyncComponent,ref,onMounted } from "vue"
+import { computed, defineAsyncComponent } from "vue"
 const emit = defineEmits(["showModalChange"])
 const props = defineProps({
   modalIsOpen:Boolean,
   closeButtonNeed: Boolean,
   bodyPath: String
 })
-const sample = ref(null)
-onMounted(() => {
-      console.log(sample.value);
-    })
+
 
 
 const ModalBody = computed(() =>

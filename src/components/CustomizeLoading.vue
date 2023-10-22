@@ -22,15 +22,9 @@ import Loading from "vue-loading-overlay"
 import { ref } from "vue"
 
 const props = defineProps({
-  size: {
-    type: Number
-  },
-  borderSize: {
-    type: Number
-  },
-  color: {
-    type: String
-  }
+  size: Number,
+  borderSize: Number,
+  color: String
 })
 
 const size = ref(props.size ? props.size : 50)
