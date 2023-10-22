@@ -4,13 +4,13 @@ import { db } from "../firebaseConfig"
 export class FbService {
 
     /**
-     * 
-     * @param {*} docName 
-     * @param {*} userUid 
-     * @returns 
+     * ドキュメントからデータ取得する
+     * @param {*} collectionName コレクション名
+     * @param {*} docName ドキュメント名
+     * @returns データ結果、false
      */
-    getDataByDocName = async (docName, userUid) => {
-        const docResult = await getDoc(doc(db, docName, userUid))
+    getDataByDocName = async (collectionName, docName) => {
+        const docResult = await getDoc(doc(db, collectionName, docName))
         let dataResult
         if (docResult.exists())
             dataResult = docResult.data()
@@ -20,7 +20,13 @@ export class FbService {
         return dataResult;
     }
 
-    updateDataByDocName = async (docName, userUid, input) => {
-        await updateDoc(doc(db, docName, userUid), { name: input })
+    /**
+     * データ更新
+     * @param {*} collectionName コレクション名
+     * @param {*} docName ドキュメント名
+     * @param {*} input 更新したい入力値
+     */
+    updateDataByDocName = async (collectionName, docName, input) => {
+        await updateDoc(doc(db, collectionName, docName), { name: input })
     }
 }

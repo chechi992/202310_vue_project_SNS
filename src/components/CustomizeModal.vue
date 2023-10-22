@@ -1,8 +1,10 @@
 <template>
   <div v-if="props.modalIsOpen" id="modal">
     <div id="modal-content" class="modal">
-      <button v-if="closeButtonNeed" @click="showModal" class="close">X</button>
-      <ModalBody />
+      <button v-if="closeButtonNeed" @click="showModal" class="closecontainer">
+        <div class="closebutton">X</div>
+      </button>
+      <ModalBody/>
     </div>
     <div ref="sample" id="modal-overlay"></div>
   </div>
@@ -30,7 +32,7 @@ const showModal = () => {
   
 <style scoped>
 .modal {
-  padding: 10px;
+  padding: 0 5px 5px 5px;
   background: #faebd7;
   z-index: 2;
   display: block;
@@ -39,12 +41,12 @@ const showModal = () => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  border-radius: 10px;
+  border-radius: 5px;
 }
-.close {
-  position: absolute;
-  top: 0px;
-  right: 10px;
+.closecontainer {
+ width: 100%;
+ display: flex;
+ justify-content: flex-end;
 }
 
 #modal-overlay {
