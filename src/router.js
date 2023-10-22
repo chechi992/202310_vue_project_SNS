@@ -54,7 +54,7 @@ router.beforeEach(async (to, from, next) => {
           if (to.fullPath === "/Register" || from.fullPath === "/Register")
             console.log("登録画面");
           //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
-          else if (to.fullPath === "/" && from.fullPath !== "/")
+          else if (to.fullPath !== "/" && from.fullPath === "/")
             router.push({ name: "LoginPage" })
         }
       })
