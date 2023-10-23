@@ -7,11 +7,11 @@
     </h1>
     <div>
       <div>
-        <label for="email" class="text-white">User Email: {{ userRef.email }}</label>
+        <label for="email" class="text-white">User Email: {{ store.state.userInfo.email }}</label>
       </div>
       <div>
         <label for="displayName" class="text-white">User Name: </label>
-        <span v-if="!editing" class="text-white">{{ userRef.name }}</span>
+        <span v-if="!editing" class="text-white">{{ store.state.userInfo.name }}</span>
         <input v-if="editing" v-model="editedDisplayName" />
         <button
           v-if="editing"
@@ -50,13 +50,14 @@
 </template>
 
 <script setup>
-import { useRoute, useRouter } from "vue-router"
-import { ref, onMounted, watch } from "vue"
-import { onAuthStateChanged } from "firebase/auth"
-import { doc, getDoc, updateDoc } from "firebase/firestore"
-import { auth, db } from "../firebaseConfig"
+import { useRoute } from "vue-router"
+import { ref, onMounted } from "vue"
+import store from "../store"
+import router from "../router"
 
-const userRef = ref({ email: "", name: "" })
+//router初期化
+const route = useRoute()
+console.log("route", route.params)
 const editing = ref(false)
 const editedDisplayName = ref("")
 
@@ -69,66 +70,27 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
   )
 }
 
-import { useStore } from "vuex"
-import { indexUserInfo } from "../router/index"
-
-const store = useStore()
 /**
  * 抓取用戶資料
  */
-onMounted(() => {
-  store.state.userInfo = indexUserInfo
+onMounted(async () => {
   console.log("User is logined:", store.state.userInfo)
-  console.log(indexUserInfo)
+  const userData = await store.state.FbService.getDataByDocName("users", store.state.userInfo.uid)
+
+  if (userData) {
+    // 更新名字
+    store.state.userInfo.name = userData.name
+    // 更新 editedDisplayName
+    editedDisplayName.value = userData.name
+  }
 })
-
-onMounted(() => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      userRef.value = user
-      console.log("User UID:", user.uid)
-
-      const userDocRef = doc(db, "users", user.uid)
-      console.log(userDocRef)
-
-      const userDoc = await getDoc(userDocRef)
-      console.log(userDoc.data())
-
-      userRef.value = {
-        ...userRef.value,
-        ...userDoc.data()
-      }
-
-      if (userDoc.exists()) {
-        const userData = userDoc.data()
-        // 將名字添加到 indexUserInfo
-        // 更新名字
-        indexUserInfo.disPlayName = userData.name
-        console.log(indexUserInfo)
-        // 更新 editedDisplayName
-        editedDisplayName.value = indexUserInfo.disPlayName
-      }
-    }
-  })
-  // 在需要使用 indexUserInfo 的地方，可以直接訪問它
-  watch(editedDisplayName, (newValue, oldValue) => {
-    console.log(oldValue)
-    if (!editing.value && newValue !== userRef.value.name) {
-      editedDisplayName.value = indexUserInfo.disPlayName // 這裡可以這樣換嗎？
-    }
-  })
-})
-
-/**
- * 監聽editedDisplayName的變化，並確保在取消編輯時退回原始值
- */
 
 /**
  * 開始編輯，故一開始為true
  */
 const startEditing = () => {
   editing.value = true
-  editedDisplayName.value = indexUserInfo.disPlayName
+  editedDisplayName.value = store.state.userInfo.name
 }
 
 /**
@@ -143,7 +105,7 @@ const completeEditing = () => {
  */
 const cancelEditing = () => {
   editing.value = false
-  editedDisplayName.value = indexUserInfo.disPlayName
+  editedDisplayName.value = store.state.userInfo.name
 }
 
 /**
@@ -151,45 +113,18 @@ const cancelEditing = () => {
  */
 const updateUserProfile = async () => {
   try {
-    const user = userRef.value
-    const userDocRef = doc(db, "users", user.uid)
-
+    await store.state.FbService.updateDataByDocName("users",store.state.userInfo.uid , editedDisplayName.value)
     // 將 indexUserInfo.name 設置為新的名稱
-    indexUserInfo.disPlayName = editedDisplayName.value
 
-    await updateDoc(userDocRef, {
-      name: editedDisplayName.value
-    })
+    let tmpUserInfo = store.state.userInfo
+    tmpUserInfo.name = editedDisplayName.value
+    store.commit("setUserInfo", tmpUserInfo);
 
-    userRef.value = {
-      ...userRef.value,
-      name: editedDisplayName.value
-    }
     console.log("User profile updated successfully!", editedDisplayName.value)
   } catch (error) {
     console.error("Error updating user profile:", error)
   }
 }
-
-/**
- * 確認login與否
- */
-const isLoggedIn = ref(false)
-
-onMounted(() => {
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      isLoggedIn.value = true
-    } else {
-      isLoggedIn.value = false
-    }
-  })
-})
-
-//router初期化
-const router = useRouter()
-const route = useRoute()
-console.log("route", route.params)
 
 /**
  * ホームページへ遷移

@@ -128,7 +128,7 @@
 
       <div class="flex justify-end gap-2 mt-3">
         <button
-          @click="router.push({ name:'LoginPage'})"
+          @click="router.push({ name: 'LoginPage' })"
           type="submit"
           class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
@@ -148,16 +148,10 @@
 
 <script setup>
 import { ref, computed } from "vue"
-import { useRouter } from "vue-router"
-import { useStore } from "vuex"
-import {auth} from "../firebaseConfig"
-import { sendEmailVerification } from "firebase/auth"
+import store from "../store"
+import router from "../router"
 
-//初期化
-const store = useStore()
-const fbService = store.state.fbService;
-//ルーターメソッド初期化
-const router = useRouter()
+const AuthService = store.state.AuthService
 //登録のアカウトデータ
 const registerInfo = ref({
   name: "",
@@ -180,25 +174,17 @@ const confirmPassword = computed(() => {
 const register = async () => {
   console.log("Register start", registerInfo.value)
   if (confirmPassword.value && registerInfo.value.email !== "") {
-    await fbService.registerAccount(registerInfo).then((result) => {
-      console.log("Register IsSuccessFull?", result)
-
-      // 假設 auth 是通過 getAuth() 取得的 Authentication 實例，user 是成功註冊或登入的用戶對象
-      sendEmailVerification(auth.currentUser)
-        .then(() => {
-          // 驗證電子郵件已成功發送
-          console.log("Verification email sent!")
-        })
-        .catch((error) => {
-          // 發送驗證電子郵件時出錯
-          console.error("Error sending verification email: ", error)
-        })
-        
-      result ? router.push({ name:"HomePage"}) : console.log("Register Fail")
-    })
+    try {
+      const registerResult = await AuthService.registerAccount(registerInfo)
+      if (registerResult !== false) {
+        await AuthService.sendVerificationMail(registerResult)
+        router.push({ name: "HomePage" })
+      }
+    } catch (e) {
+      console.error("error", e)
+    }
   }
 }
-
 </script>
 
 <style scoped lang="scss">

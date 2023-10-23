@@ -19,22 +19,16 @@
   
 <script setup>
 import Loading from "vue-loading-overlay"
-import { ref, defineProps } from "vue"
+import { ref } from "vue"
 
 const props = defineProps({
-  size: {
-    type: Number
-  },
-  borderSize: {
-    type: Number
-  },
-  color: {
-    type: String
-  }
+  size: Number,
+  borderSize: Number,
+  color: String
 })
 
-const size = ref(props.size ? props.size : 17)
-const borderSize = ref(props.borderSize ? props.borderSize : 50)
+const size = ref(props.size ? props.size : 50)
+const borderSize = ref(props.borderSize ? props.borderSize : 17)
 const color = ref(props.color ? props.color : "#93a1e9")
 </script>
 

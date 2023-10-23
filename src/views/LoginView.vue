@@ -1,6 +1,6 @@
 <template>
     <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center" >
-    <customize-loading :size="150" :borderSize="30"/>
+    <customize-loading :size="150" :borderSize="20"/>
   </div>
   <div v-show="!isLoading" class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -126,13 +126,12 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router"
-import { useStore } from "vuex"
+import router from "../router"
+import store from "../store"
 import { ref } from "vue"
 import CustomizeLoading from "../components/CustomizeLoading.vue"
 
-const store = useStore()
-const router = useRouter()
+
 //インプット:ID, Password
 const loginInfo = ref({ email: "", pwd: "" })
 //エラーメッセージ
@@ -152,7 +151,7 @@ const toRegisterView = () => {
  */
 const SignIn = () => {
   isLoading.value = true;
-  store.state.fbService.singnInAccount(loginInfo)
+  store.state.AuthService.singnInAccount(loginInfo)
   .then((result) => {
     if (result.uid) {
       router.push({ name: "HomePage" })
