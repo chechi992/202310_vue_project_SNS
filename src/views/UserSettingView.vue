@@ -1,51 +1,57 @@
 <template>
-  <div>
-    <h1
-      class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
-    >
-      UserSettingPage
-    </h1>
-    <div>
+  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
+    <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">asdasd</div>
+
+    <div class="w-[700px] h-screen ml-[250px]">
       <div>
-        <label for="email" class="text-white">User Email: {{ store.state.userInfo.email }}</label>
-      </div>
-      <div>
-        <label for="displayName" class="text-white">User Name: </label>
-        <span v-if="!editing" class="text-white">{{ store.state.userInfo.name }}</span>
-        <input v-if="editing" v-model="editedDisplayName" />
-        <button
-          v-if="editing"
-          class="text-white"
-          @click="completeEditing"
-          v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-        >
-          Complete
-        </button>
-        <button
-          v-if="editing"
-          class="text-white"
-          @click="cancelEditing"
-          v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-        >
-          Cancel
-        </button>
+        <div class="mx-6 mt-16 bg-gray_500 gap-y-5">
+          <div class="bg-gray_800">
+            <label for="email" class="text-white"
+              >User Email: {{ store.state.userInfo.email }}</label
+            >
+          </div>
+          <div>
+            <label for="displayName" class="text-white">User Name: </label>
+            <span v-if="!editing" class="text-white">{{ store.state.userInfo.name }}</span>
+            <input v-if="editing" v-model="editedDisplayName" />
+            <button
+              v-if="editing"
+              class="text-white"
+              @click="completeEditing"
+              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+            >
+              Complete
+            </button>
+            <button
+              v-if="editing"
+              class="text-white"
+              @click="cancelEditing"
+              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+            >
+              Cancel
+            </button>
+          </div>
+          <button
+            class="text-white"
+            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+            @click="startEditing"
+          >
+            Edit Profile
+          </button>
+          <button
+            class="text-white"
+            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+            @click="toHomeView"
+          >
+            toHomeView
+          </button>
+        </div>
+
+        <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
       </div>
     </div>
-    <button
-      class="text-white"
-      v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-      @click="startEditing"
-    >
-      Edit Profile
-    </button>
-    <button
-      class="text-white"
-      v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-      @click="toHomeView"
-    >
-      toHomeView
-    </button>
-    <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
+
+    <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
   </div>
 </template>
 
@@ -113,12 +119,16 @@ const cancelEditing = () => {
  */
 const updateUserProfile = async () => {
   try {
-    await store.state.FbService.updateDataByDocName("users",store.state.userInfo.uid , editedDisplayName.value)
+    await store.state.FbService.updateDataByDocName(
+      "users",
+      store.state.userInfo.uid,
+      editedDisplayName.value
+    )
     // 將 indexUserInfo.name 設置為新的名稱
 
     let tmpUserInfo = store.state.userInfo
     tmpUserInfo.name = editedDisplayName.value
-    store.commit("setUserInfo", tmpUserInfo);
+    store.commit("setUserInfo", tmpUserInfo)
 
     console.log("User profile updated successfully!", editedDisplayName.value)
   } catch (error) {
