@@ -2,18 +2,29 @@
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">asdasd</div>
 
-    <div class="w-[700px] h-screen ml-[250px]">
-      <div>
-        <div class="mx-6 mt-16 bg-gray_500 gap-y-5">
-          <div class="bg-gray_800">
-            <label for="email" class="text-white"
-              >User Email: {{ store.state.userInfo.email }}</label
-            >
+    <div class="w-[600px] h-screen ml-[250px] border-gray_800">
+      <div class="w-auto">
+        <div class="px-3 py-5 mx-6 mt-16 bg-gray_500">
+          <div class="flex flex-col gap-3 form_group">
+            <div class="flex flex-col flex-grow">
+              <label class="block mb-2 text-white">メールアドレス</label>
+              <label for="email" class="flex-grow p-2 text-white bg-gray_800">{{
+                store.state.userInfo.email
+              }}</label>
+            </div>
+            <div class="flex flex-col flex-grow">
+              <label class="block mb-2 text-white">ユーザ名</label>
+              <span v-if="!editing" class="p-2 text-white bg-gray_800">{{
+                store.state.userInfo.name
+              }}</span>
+              <input
+                v-if="editing"
+                class="p-2 bg-white text-gray_800"
+                v-model="editedDisplayName"
+              />
+            </div>
           </div>
-          <div>
-            <label for="displayName" class="text-white">User Name: </label>
-            <span v-if="!editing" class="text-white">{{ store.state.userInfo.name }}</span>
-            <input v-if="editing" v-model="editedDisplayName" />
+          <div class="mt-3 form_group">
             <button
               v-if="editing"
               class="text-white"
@@ -30,28 +41,44 @@
             >
               Cancel
             </button>
+            <button
+              class="text-white"
+              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+              @click="startEditing"
+            >
+              Edit Profile
+            </button>
+            <button
+              class="text-white"
+              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+              @click="toHomeView"
+            >
+              toHomeView
+            </button>
           </div>
-          <button
-            class="text-white"
-            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-            @click="startEditing"
-          >
-            Edit Profile
-          </button>
-          <button
-            class="text-white"
-            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-            @click="toHomeView"
-          >
-            toHomeView
-          </button>
         </div>
 
         <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
       </div>
     </div>
 
-    <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
+    <div class="w-[250px] h-screen fixed ml-[900px] border-l-[1px] border-gray_800">
+      <div class="form_group">
+        <div class="flex flex-col items-start gap-4">
+          <div class="flex items-center justify-center w-16 h-16 bg-gray-300 rounded-full">
+            <!-- 放置icon -->
+            <img src="" alt="User Icon" class="w-12 h-12 rounded-full" />
+          </div>
+          <input type="file" id="userImage" name="userImage" class="hidden" />
+          <label
+            for="userImage"
+            class="flex justify-center px-3 py-1 text-sm font-semibold leading-6 text-white rounded-md shadow-sm w-25 bg-purple hover:bg-purple focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            画像アップロード
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
