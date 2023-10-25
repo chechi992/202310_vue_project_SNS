@@ -1,8 +1,22 @@
 <template>
-  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
-    <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">asdasd</div>
+  <div v-show="!isLoading" class="flex flex-col-reverse h-screen p-5 m-auto min-[475px]:flex-row">
+    <div
+      class="hidden sm:w-1/4 sm:block first-letter:8w-1/4 border-r-[1px] border-gray_800 h-screen"
+    >
+      <div class="lg:hidden">
+        <button class="block lg:hidden">☰</button>
+      </div>
+      <div class="hidden lg:block">
+        <h2 class="text-xl font-semibold">設定</h2>
+        <ul class="mt-4">
+          <li class="mb-2">個人情報設定</li>
+          <li class="mb-2">電話設定</li>
+          <li class="mb-2">說明</li>
+        </ul>
+      </div>
+    </div>
 
-    <div class="w-[600px] h-screen ml-[250px] border-gray_800">
+    <div class="sm:w-1/2">
       <div class="w-auto">
         <div class="px-3 py-5 mx-6 mt-16 bg-gray_500">
           <div class="flex flex-col gap-3 form_group">
@@ -62,9 +76,9 @@
       </div>
     </div>
 
-    <div class="w-[250px] h-screen fixed ml-[900px] border-l-[1px] border-gray_800">
+    <div class="">
       <div class="form_group">
-        <div class="flex flex-col items-start gap-4">
+        <div class="flex flex-col items-center gap-4">
           <div class="flex items-center justify-center w-16 h-16 bg-gray-300 rounded-full">
             <!-- 放置icon -->
             <img src="" alt="User Icon" class="w-12 h-12 rounded-full" />
