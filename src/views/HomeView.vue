@@ -4,7 +4,9 @@
   </div>
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">asdasd</div>
-
+    <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'facebook' }" />
+    <font-awesome-icon :icon="['fas', 'arrow-right']" />
+    <font-awesome-icon icon="leaf" />
     <div class="w-[850px] h-screen ml-[250px]">
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
         toSettingPage
