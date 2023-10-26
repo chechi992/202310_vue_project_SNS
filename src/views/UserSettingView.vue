@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!isLoading" class="flex flex-col-reverse h-screen p-5 m-auto min-[475px]:flex-row">
+  <div v-show="!isLoading" class="flex flex-col-reverse p-5 m-auto min-[475px]:flex-row">
     <div
       class="hidden sm:w-1/4 sm:block first-letter:8w-1/4 border-r-[1px] border-gray_800 h-screen"
     >
@@ -38,38 +38,38 @@
               />
             </div>
           </div>
-          <div class="mt-3 form_group">
-            <button
-              v-if="editing"
-              class="text-white"
-              @click="completeEditing"
-              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-            >
-              Complete
-            </button>
-            <button
-              v-if="editing"
-              class="text-white"
-              @click="cancelEditing"
-              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-            >
-              Cancel
-            </button>
-            <button
-              class="text-white"
-              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-              @click="startEditing"
-            >
-              Edit Profile
-            </button>
-            <button
-              class="text-white"
-              v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
-              @click="toHomeView"
-            >
-              toHomeView
-            </button>
-          </div>
+        </div>
+        <div class="mt-3 form_group">
+          <button
+            v-if="editing"
+            class="text-white"
+            @click="completeEditing"
+            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+          >
+            Complete
+          </button>
+          <button
+            v-if="editing"
+            class="text-white"
+            @click="cancelEditing"
+            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+          >
+            Cancel
+          </button>
+          <button
+            class="text-white"
+            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+            @click="startEditing"
+          >
+            Edit Profile
+          </button>
+          <button
+            class="text-white"
+            v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
+            @click="toHomeView"
+          >
+            toHomeView
+          </button>
         </div>
 
         <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
