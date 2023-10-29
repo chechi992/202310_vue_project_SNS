@@ -18,9 +18,7 @@
 
       <h3 class="text-white">Count:{{ count }}</h3>
 
-      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="countPlus">
-        {{ "CountAdd" }}
-      </button>
+     
 
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="showModal">
         {{ "showModal" }}
@@ -83,12 +81,6 @@ const toSettingView = () => {
   router.push({ name: "UserSettingPage", params: { user: "taro", age: 33 } })
 }
 
-/**
- * CountPlus
- */
-const countPlus = () => {
-  count.value++
-}
 </script>
 
 <style scoped>
