@@ -2,11 +2,11 @@
   <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center">
     <customize-loading />
   </div>
-  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex ">
+  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
       asdasd
-      <IconLabel :iconType="'fas'" :iconName="'house'" :labelText="'ホーム'"/>
-      <IconLabel :iconType="'fas'" :iconName="'magnifying-glass'" :labelText="'検索'"/>
+      <IconLabel :iconType="'fas'" :iconName="'house'" :labelText="'ホーム'" />
+      <IconLabel :iconType="'fas'" :iconName="'magnifying-glass'" :labelText="'検索'" />
     </div>
 
     <div class="w-[850px] h-screen ml-[250px]">
