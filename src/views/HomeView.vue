@@ -2,11 +2,13 @@
   <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center">
     <customize-loading />
   </div>
-  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
-    <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">asdasd</div>
-    <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'facebook' }" />
-    <font-awesome-icon :icon="['fas', 'arrow-right']" />
-    <font-awesome-icon icon="leaf" />
+  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex ">
+    <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
+      asdasd
+      <IconLabel :iconType="'fas'" :iconName="'house'" :labelText="'ホーム'"/>
+      <IconLabel :iconType="'fas'" :iconName="'magnifying-glass'" :labelText="'検索'"/>
+    </div>
+
     <div class="w-[850px] h-screen ml-[250px]">
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
         toSettingPage
@@ -18,8 +20,6 @@
 
       <h3 class="text-white">Count:{{ count }}</h3>
 
-     
-
       <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="showModal">
         {{ "showModal" }}
       </button>
@@ -29,7 +29,7 @@
 
     <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
   </div>
-  <customize-modal
+  <CustomizeModal
     :modalIsOpen="modalIsOpen"
     :closeButtonNeed="true"
     @showModalChange="showModal"
@@ -43,6 +43,7 @@ import router from "../router"
 import { ref, onMounted } from "vue"
 import CustomizeLoading from "../components/Customizeloading.vue"
 import CustomizeModal from "../components/CustomizeModal.vue"
+import IconLabel from "../components/IconLabel.vue"
 
 const count = ref(0)
 //ロディングフラグ
@@ -80,7 +81,6 @@ const signOut = async () => {
 const toSettingView = () => {
   router.push({ name: "UserSettingPage", params: { user: "taro", age: 33 } })
 }
-
 </script>
 
 <style scoped>
@@ -88,5 +88,3 @@ const toSettingView = () => {
   @apply font-bold py-2 px-4 rounded bg-tahiti;
 }
 </style>
-
-
