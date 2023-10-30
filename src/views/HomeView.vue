@@ -5,22 +5,24 @@
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
       asdasd
-      <IconLabel :iconType="'fas'" :iconName="'house'" :labelText="'ホーム'" />
-      <IconLabel :iconType="'fas'" :iconName="'magnifying-glass'" :labelText="'検索'" />
+      <IconLabel :icon="{type:'fas',name:'house'}" :text="'ホーム'"/>
+      <IconLabel :icon="{type:'fas',name:'magnifying-glass'}" :text="'検索'" />
     </div>
 
     <div class="w-[850px] h-screen ml-[250px]">
-      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="toSettingView">
-        toSettingPage
+      <button v-bind:class="[customizeStyle()]" @click="toSettingView">toSettingPage</button>
+      <button v-bind:class="[customizeStyle()]" @click="signOut">Sign out</button>
+      <button
+        class="text-white"
+        :style="{ margin: marginstyle, backgroundColor: '#673AB7', padding:marginstyle}"
+        v-if="!store.state.userInfo.emailVerified"
+      >
+        未完成信箱認證
       </button>
-      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="signOut">
-        Sign out
-      </button>
-      <button class="btn" v-if="!store.state.userInfo.emailVerified">未完成信箱認證</button>
 
       <h3 class="text-white">Count:{{ count }}</h3>
 
-      <button v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]" @click="showModal">
+      <button v-bind:class="[customizeStyle()]" @click="showModal">
         {{ "showModal" }}
       </button>
 
@@ -29,7 +31,7 @@
 
     <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
   </div>
-  <CustomizeModal
+  <Modal
     :modalIsOpen="modalIsOpen"
     :closeButtonNeed="true"
     @showModalChange="showModal"
@@ -42,20 +44,21 @@ import store from "../store"
 import router from "../router"
 import { ref, onMounted } from "vue"
 import CustomizeLoading from "../components/Customizeloading.vue"
-import CustomizeModal from "../components/CustomizeModal.vue"
-import IconLabel from "../components/CustomIconLabel.vue"
+import Modal from "../components/CustomizeModal.vue"
+import IconLabel from "../components/CustomizeIconLabel.vue"
 
 const count = ref(0)
 //ロディングフラグ
 const isLoading = ref(true)
 const modalIsOpen = ref(false)
 //カスタマイズ属性
-const buttonCustomizaStyleAttribute = ref({ margin: 10, padding: 10, background_color: "#f43f5e" })
+
 //カスタマイズ
-// eslint-disable-next-line no-unused-vars
-const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => {
+const customizeStyle = () => {
   return "text-white " + "m-[10px] " + "p-[10px] " + "rounded-md " + "bg-[#f43f5e] " + "h-[100px]"
 }
+
+const marginstyle = ref("0 0 0 20px")
 
 onMounted(() => {
   console.log("User is logined:", store.state.userInfo)
@@ -83,8 +86,4 @@ const toSettingView = () => {
 }
 </script>
 
-<style scoped>
-.btn {
-  @apply font-bold py-2 px-4 rounded bg-tahiti;
-}
-</style>
+
