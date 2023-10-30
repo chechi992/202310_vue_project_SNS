@@ -43,9 +43,8 @@
 import store from "../store"
 import router from "../router"
 import { ref, onMounted } from "vue"
-import CustomizeLoading from "../components/Customizeloading.vue"
+import CustomizeLoading from "@/components/Customizeloading.vue"
 import Modal from "../components/CustomizeModal.vue"
-import IconLabel from "../components/CustomizeIconLabel.vue"
 
 const count = ref(0)
 //ロディングフラグ
