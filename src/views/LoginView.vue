@@ -129,7 +129,7 @@
 import router from "../router"
 import store from "../store"
 import { ref } from "vue"
-import CustomizeLoading from "../components/CustomizeLoading.vue"
+import CustomizeLoading from "@/components/CustomizeLoading.vue"
 
 
 //インプット:ID, Password

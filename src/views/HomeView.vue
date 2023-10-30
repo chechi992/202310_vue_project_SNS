@@ -43,7 +43,7 @@
 import store from "../store"
 import router from "../router"
 import { ref, onMounted } from "vue"
-import CustomizeLoading from "../components/Customizeloading.vue"
+import CustomizeLoading from "@/components/Customizeloading.vue"
 import CustomizeModal from "../components/CustomizeModal.vue"
 
 const count = ref(0)
