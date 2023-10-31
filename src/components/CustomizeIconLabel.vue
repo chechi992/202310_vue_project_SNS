@@ -4,7 +4,7 @@
     :style="{
       '--labelMt': margin.top + 'px',
       '--labelMb': margin.bottom + 'px',
-            '--labelMl': margin.left + 'px',
+      '--labelMl': margin.left + 'px',
       '--labelMr': margin.right + 'px'
     }"
   >
@@ -30,9 +30,13 @@ const props = defineProps({
   color: String,
   text: String,
   iconTextSpace: Number,
-  margin: { top: Number, bottom: Number, left: Number, right: Number },
-  MarginBottom: Number,
-  MarginTop: Number
+  margin: {
+    top: Number,
+    bottom: Number,
+    left: Number,
+    right: Number,
+    vertical: Number
+  }
 })
 
 const text = ref(props.text ? props.text : "")
@@ -67,12 +71,18 @@ const sz = ref(
 
 const clr = ref(props.iconColor ? props.color : "white")
 const iconTextSp = ref(props.iconTextSpace ? props.iconTextSpace : 25)
+
 const margin = ref({
   bottom: props.margin.bottom ? props.margin.bottom : 0,
   top: props.margin.top ? props.margin.top : 0,
-  left: props.margin.bottom ? props.margin.bottom : 0,
-  right: props.margin.top ? props.margin.top : 0
+  left: props.margin.left ? props.margin.left : 0,
+  right: props.margin.right ? props.margin.right : 0
 })
+
+if (props.margin.vertical) {
+  margin.value.top = props.margin.vertical
+  margin.value.bottom = props.margin.vertical
+}
 </script>
 
 <style scoped>
@@ -81,6 +91,8 @@ const margin = ref({
   align-items: center;
   margin-top: var(--labelMt);
   margin-bottom: var(--labelMb);
+  margin-left: var(--labelMl);
+  margin-right: var(--labelMr);
 }
 .iconTSp {
   margin-right: var(--iconTextSpace);
