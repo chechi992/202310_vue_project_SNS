@@ -15,6 +15,7 @@
       '--hoverBgColor': myHoverBgColor
     }"
     @click="onChange"
+    v-if="mode === 'button' || mode === 'label'"
   >
     <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
       <font-awesome-icon
@@ -24,14 +25,38 @@
       />
     </div>
     <p
-      v-if="mode === 'button' || mode === 'label'"
       class="textLabel"
       :style="{ '--textSize': sz.text + 'px', '--textColor': clr }"
     >
       {{ text }}
     </p>
-    <input
-      v-else-if="mode === 'input'"
+  </div>
+
+  <div
+    class="iconTextContainer"
+    :style="{
+      '--labelMt': myMargin.top + 'px',
+      '--labelMb': myMargin.bottom + 'px',
+      '--labelMl': myMargin.left + 'px',
+      '--labelMr': myMargin.right + 'px',
+      '--labelPt': myPadding.top + 'px',
+      '--labelPb': myPadding.bottom + 'px',
+      '--labelPl': myPadding.left + 'px',
+      '--labelPr': myPadding.right + 'px',
+      '--borderRadius': borderRadius + 'px',
+      '--backgroundColor': myBgColor,
+      '--hoverBgColor': myHoverBgColor
+    }"
+    v-else-if="mode === 'input'"
+  >
+    <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
+      <font-awesome-icon
+        :icon="['fas', props.icon.name]"
+        :size="sz.icon"
+        :style="{ color: clr }"
+      />
+    </div>
+  <input
       class="inputLabel"
       :placeholder="placeholder"
       :style="{
@@ -40,6 +65,7 @@
       }"
     />
   </div>
+
 </template>
 
 <script setup>
