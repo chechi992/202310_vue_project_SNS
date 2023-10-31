@@ -3,7 +3,9 @@
     class="iconTextContainer"
     :style="{
       '--labelMt': margin.top + 'px',
-      '--labelMb': margin.bottom + 'px'
+      '--labelMb': margin.bottom + 'px',
+            '--labelMl': margin.left + 'px',
+      '--labelMr': margin.right + 'px'
     }"
   >
     <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
@@ -28,6 +30,7 @@ const props = defineProps({
   color: String,
   text: String,
   iconTextSpace: Number,
+  margin: { top: Number, bottom: Number, left: Number, right: Number },
   MarginBottom: Number,
   MarginTop: Number
 })
@@ -65,8 +68,10 @@ const sz = ref(
 const clr = ref(props.iconColor ? props.color : "white")
 const iconTextSp = ref(props.iconTextSpace ? props.iconTextSpace : 25)
 const margin = ref({
-  bottom: props.MarginBottom ? props.MarginBottom : 30,
-  top: props.MarginTop ? props.MarginTop : 30
+  bottom: props.margin.bottom ? props.margin.bottom : 0,
+  top: props.margin.top ? props.margin.top : 0,
+  left: props.margin.bottom ? props.margin.bottom : 0,
+  right: props.margin.top ? props.margin.top : 0
 })
 </script>
 

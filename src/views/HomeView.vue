@@ -5,8 +5,8 @@
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
       asdasd
-      <IconLabel :icon="{ type: 'fas', name: 'house' }" :text="'ホーム'" />
-      <IconLabel :icon="{ type: 'fas', name: 'magnifying-glass' }" :text="'検索'" />
+      <IconLabel :icon="{ type: 'fas', name: 'house' }" :text="'ホーム'" :margin="{ bottom: 30,top:30 }" />
+      <IconLabel :icon="{ type: 'fas', name: 'magnifying-glass' }" :text="'検索'" :margin="{ bottom: 30 }" />
     </div>
 
     <div class="w-[850px] h-screen ml-[250px]">
