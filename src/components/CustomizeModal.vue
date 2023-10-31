@@ -1,25 +1,25 @@
 <template>
   <div v-if="props.modalIsOpen" id="modal">
     <div id="modal-content" class="modal">
-      <button v-if="closeButtonNeed" @click="showModal" class="closecontainer">
-        <div class="closebutton">X</div>
-      </button>
-      <ModalBody/>
+      <div class="closecontainer">
+        <button v-if="closeButtonNeed" @click="showModal" class="closebutton">
+          <font-awesome-icon :icon="['fas', 'xmark']" />
+        </button>
+      </div>
+      <ModalBody />
     </div>
     <div ref="sample" id="modal-overlay"></div>
   </div>
 </template>
-    
-  <script setup>
+
+<script setup>
 import { computed, defineAsyncComponent } from "vue"
 const emit = defineEmits(["showModalChange"])
 const props = defineProps({
-  modalIsOpen:Boolean,
+  modalIsOpen: Boolean,
   closeButtonNeed: Boolean,
   bodyPath: String
 })
-
-
 
 const ModalBody = computed(() =>
   defineAsyncComponent(() => import(/* @vite-ignore */ props.bodyPath))
@@ -29,7 +29,7 @@ const showModal = () => {
   emit("showModalChange")
 }
 </script>
-  
+
 <style scoped>
 .modal {
   padding: 0 5px 5px 5px;
@@ -44,9 +44,17 @@ const showModal = () => {
   border-radius: 5px;
 }
 .closecontainer {
- width: 100%;
- display: flex;
- justify-content: flex-end;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.closebutton {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #modal-overlay {

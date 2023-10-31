@@ -4,13 +4,13 @@
     <button>確認</button>
   </div>
 </template>
-       
-     <script setup>
+
+<script setup>
 import { ref } from "vue"
 const message = ref("message")
 </script>
-     
-   <style scoped>
+
+<style scoped>
 .Container {
   display: flex;
   align-items: center;
