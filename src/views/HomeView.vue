@@ -1,12 +1,12 @@
 <template>
   <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center">
-    <customize-loading />
+    <Loading />
   </div>
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
       asdasd
-      <IconLabel :icon="{type:'fas',name:'house'}" :text="'ホーム'"/>
-      <IconLabel :icon="{type:'fas',name:'magnifying-glass'}" :text="'検索'" />
+      <IconLabel :icon="{ type: 'fas', name: 'house' }" :text="'ホーム'" />
+      <IconLabel :icon="{ type: 'fas', name: 'magnifying-glass' }" :text="'検索'" />
     </div>
 
     <div class="w-[850px] h-screen ml-[250px]">
@@ -14,7 +14,7 @@
       <button v-bind:class="[customizeStyle()]" @click="signOut">Sign out</button>
       <button
         class="text-white"
-        :style="{ margin: marginstyle, backgroundColor: '#673AB7', padding:marginstyle}"
+        :style="{ margin: marginstyle, backgroundColor: '#673AB7', padding: marginstyle }"
         v-if="!store.state.userInfo.emailVerified"
       >
         未完成信箱認證
@@ -43,14 +43,15 @@
 import store from "../store"
 import router from "../router"
 import { ref, onMounted } from "vue"
-import CustomizeLoading from "@/components/Customizeloading.vue"
+import Loading from "@/components/Customizeloading.vue"
 import Modal from "../components/CustomizeModal.vue"
+import IconLabel from "../components/CustomizeIconLabel.vue"
 
 const count = ref(0)
+
 //ロディングフラグ
 const isLoading = ref(true)
 const modalIsOpen = ref(false)
-//カスタマイズ属性
 
 //カスタマイズ
 const customizeStyle = () => {
@@ -84,5 +85,3 @@ const toSettingView = () => {
   router.push({ name: "UserSettingPage", params: { user: "taro", age: 33 } })
 }
 </script>
-
-

@@ -6,12 +6,7 @@
       '--labelMb': margin.bottom + 'px'
     }"
   >
-    <div
-      class="iconTSp"
-      :style="{
-        '--iconTextSpace': iconTextSp + 'px'
-      }"
-    >
+    <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
       <font-awesome-icon
         :icon="[props.icon.type, props.icon.name]"
         :size="sz.icon"
