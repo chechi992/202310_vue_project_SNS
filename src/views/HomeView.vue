@@ -4,20 +4,35 @@
   </div>
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
-      asdasd
+      <div class="title">Nodon</div>
+
       <IconLabel
+        :mode="'label'"
         :icon="{ type: 'fas', name: 'house' }"
         :text="'ホーム'"
+        :margin="{ vertical: 20 }"
+        :padding="{ left: 10, vertical: 5 }"
+      />
+           
+      <IconLabel
+        :mode="'input'"
+        :icon="{ type: 'fas', name: 'envelope' }"
         :margin="{ vertical: 30 }"
+        :padding="{ left: 10, vertical: 5 }"
+        :placeholder="'Enter message'"
+        :size="'lg'"
       />
       <IconLabel
+        :mode="'button'"
         :icon="{ type: 'fas', name: 'magnifying-glass' }"
         :text="'検索'"
-        :margin="{ horizontal:30}"
+        :margin="{ right: 20 }"
+        :padding="{ left: 10, vertical: 10 }"
+        @onChange="onChange"
       />
     </div>
 
-    <div class="w-[850px] h-screen ml-[250px]">
+    <div class="w-[750px] h-screen ml-[250px]">
       <button :class="[customizeStyle()]" @click="toSettingView">toSettingPage</button>
       <button :class="[customizeStyle()]" @click="signOut">Sign out</button>
       <button
@@ -27,7 +42,6 @@
       >
         未完成信箱認證
       </button>
-
       <h3 class="text-white">Count:{{ count }}</h3>
 
       <button v-bind:class="[customizeStyle()]" @click="showModal">
@@ -75,6 +89,10 @@ onMounted(() => {
 
 const showModal = () => {
   modalIsOpen.value = !modalIsOpen.value
+}
+
+const onChange=()=>{
+  console.log("sssss");
 }
 
 /**
