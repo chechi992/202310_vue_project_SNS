@@ -21,6 +21,7 @@
         :padding="{ left: 10, vertical: 5 }"
         :placeholder="'Enter message'"
         :size="'lg'"
+        @textChange="change"
       />
       <IconLabel
         :mode="'button'"
@@ -91,8 +92,12 @@ const showModal = () => {
   modalIsOpen.value = !modalIsOpen.value
 }
 
+const change = () => {
+  console.log("button clicked");
+}
+
 const onChange=()=>{
-  console.log("sssss");
+  console.log("button clicked");
 }
 
 /**

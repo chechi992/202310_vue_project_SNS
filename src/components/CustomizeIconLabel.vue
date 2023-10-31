@@ -57,15 +57,16 @@
       />
     </div>
   <input
+      @input="textChange"
       class="inputLabel"
       :placeholder="placeholder"
       :style="{
         '--textSize': (Number(sz.text) + iconTextSp + myPadding.left).toString() + 'px',
         '--textColor': clr
       }"
+      
     />
   </div>
-
 </template>
 
 <script setup>
@@ -175,9 +176,12 @@ if (props.padding) {
   }
 }
 
-const emit = defineEmits(["onChange"])
+const emit = defineEmits(["onChange","textChange"])
 const onChange = () => {
   emit("onChange")
+}
+const textChange = () => {
+  emit("textChange")
 }
 </script>
 
