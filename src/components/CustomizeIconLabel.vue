@@ -18,16 +18,9 @@
     v-if="mode === 'button' || mode === 'label'"
   >
     <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
-      <font-awesome-icon
-        :icon="['fas', props.icon.name]"
-        :size="sz.icon"
-        :style="{ color: clr }"
-      />
+      <font-awesome-icon :icon="['fas', props.icon.name]" :size="sz.icon" :style="{ color: clr }" />
     </div>
-    <p
-      class="textLabel"
-      :style="{ '--textSize': sz.text + 'px', '--textColor': clr }"
-    >
+    <p class="textLabel" :style="{ '--textSize': sz.text + 'px', '--textColor': clr }">
       {{ text }}
     </p>
   </div>
@@ -50,21 +43,15 @@
     v-else-if="mode === 'input'"
   >
     <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
-      <font-awesome-icon
-        :icon="['fas', props.icon.name]"
-        :size="sz.icon"
-        :style="{ color: clr }"
-      />
+      <font-awesome-icon :icon="['fas', props.icon.name]" :size="sz.icon" :style="{ color: clr }" />
     </div>
-  <input
-      @input="textChange"
+    <input
       class="inputLabel"
       :placeholder="placeholder"
       :style="{
         '--textSize': (Number(sz.text) + iconTextSp + myPadding.left).toString() + 'px',
         '--textColor': clr
       }"
-      
     />
   </div>
 </template>
@@ -98,7 +85,8 @@ const props = defineProps({
   bgColor: String,
   hoverBgColor: String,
   mode: String,
-  placeholder: String
+  placeholder: String,
+  modelValue: String
 })
 
 const text = ref(props.text ? props.text : "")
@@ -108,17 +96,17 @@ var sizeMap = new Map([
   ["sm", "14"],
   ["lg", "18"],
   ["xl", "20"],
-  ["2xl", "28"]
-  // ["1x", "0.8em"],
-  // ["2x", "1.5em"],
-  // ["3x", "2.5em"],
-  // ["4x", "3.5em"],
-  // ["5x", "4.5em"],
-  // ["6x", "5.5em"],
-  // ["7x", "6.5em"],
-  // ["8x", "7.5em"],
-  // ["9x", "8.5em"],
-  // ["10x", "9.5em"]
+  ["2xl", "28"],
+  ["1x", "12.8"],
+  ["2x", "24"],
+  ["3x", "40"],
+  ["4x", "56"],
+  ["5x", "72"],
+  ["6x", "88"],
+  ["7x", "104"],
+  ["8x", "120"],
+  ["9x", "136"],
+  ["10x", "152"]
 ])
 const sz = ref(
   props.size
@@ -149,14 +137,20 @@ if (props.margin) {
     ...props.margin
   }
   if (props.margin.vertical) {
-    myMargin.value.top = props.margin.vertical
-    myMargin.value.bottom = props.margin.vertical
+    myMargin.value = {
+      ...myMargin.value,
+      top: props.margin.vertical,
+      bottom: props.margin.vertical
+    }
   }
   if (props.margin.all) {
-    myMargin.value.top = props.margin.all
-    myMargin.value.bottom = props.margin.all
-    myMargin.value.right = props.margin.all
-    myMargin.value.left = props.margin.all
+    myMargin.value = {
+      ...myMargin.value,
+      top: props.margin.vertical,
+      bottom: props.margin.vertical,
+      left: props.margin.vertical,
+      right: props.margin.vertical
+    }
   }
 }
 if (props.padding) {
@@ -165,23 +159,26 @@ if (props.padding) {
     ...props.padding
   }
   if (props.padding.vertical) {
-    myPadding.value.top = props.padding.vertical
-    myPadding.value.bottom = props.padding.vertical
+    myPadding.value = {
+      ...myPadding.value,
+      top: props.padding.vertical,
+      bottom: props.padding.vertical
+    }
   }
   if (props.padding.all) {
-    myPadding.value.top = props.padding.all
-    myPadding.value.bottom = props.padding.all
-    myPadding.value.right = props.padding.all
-    myPadding.value.left = props.padding.all
+    myPadding.value = {
+      ...myPadding.value,
+      top: props.padding.all,
+      bottom: props.padding.all,
+      left: props.padding.all,
+      right: props.padding.all
+    }
   }
 }
 
-const emit = defineEmits(["onChange","textChange"])
+const emit = defineEmits(["onChange"])
 const onChange = () => {
   emit("onChange")
-}
-const textChange = () => {
-  emit("textChange")
 }
 </script>
 

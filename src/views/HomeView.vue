@@ -13,16 +13,16 @@
         :margin="{ vertical: 20 }"
         :padding="{ left: 10, vertical: 5 }"
       />
-           
+
       <IconLabel
         :mode="'input'"
         :icon="{ type: 'fas', name: 'envelope' }"
-        :margin="{ vertical: 30 }"
+        :margin="{ vertical: 30, right: 30 }"
         :padding="{ left: 10, vertical: 5 }"
         :placeholder="'Enter message'"
-        :size="'lg'"
-        @textChange="change"
+        @input="onInput"
       />
+
       <IconLabel
         :mode="'button'"
         :icon="{ type: 'fas', name: 'magnifying-glass' }"
@@ -49,6 +49,14 @@
         {{ "showModal" }}
       </button>
 
+      <IconLabel
+        :mode="'input'"
+        :icon="{ type: 'fas', name: 'envelope' }"
+        :margin="{ vertical: 30, right: 30 }"
+        :padding="{ all: 10 }"
+        :placeholder="'Enter message'"
+        @input="onInput"
+      />
       <div class="w-[150px] ml-[100px] bg-tahiti py-96">asdsadsa</div>
     </div>
 
@@ -92,12 +100,13 @@ const showModal = () => {
   modalIsOpen.value = !modalIsOpen.value
 }
 
-const change = () => {
-  console.log("button clicked");
+// output value key by key
+const onInput = (e) => {
+  console.log(e.target.value)
 }
 
-const onChange=()=>{
-  console.log("button clicked");
+const onChange = () => {
+  console.log("button clicked")
 }
 
 /**
