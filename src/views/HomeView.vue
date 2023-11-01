@@ -100,7 +100,6 @@ const showModal = () => {
   modalIsOpen.value = !modalIsOpen.value
 }
 
-// output value key by key
 const onInput = (e) => {
   console.log(e.target.value)
 }

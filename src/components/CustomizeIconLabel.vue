@@ -17,16 +17,23 @@
     @click="onChange"
     v-if="mode === 'button' || mode === 'label'"
   >
-    <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
-      <font-awesome-icon :icon="['fas', props.icon.name]" :size="sz.icon" :style="{ color: clr }" />
+    <div class="iconTSp" :style="{ '--iconTextSpace': labelAttr.iconTextSp + 'px' }">
+      <font-awesome-icon
+        :icon="[props.icon.type, props.icon.name]"
+        :size="labelAttr.size.icon"
+        :style="{ color: labelAttr.color }"
+      />
     </div>
-    <p class="textLabel" :style="{ '--textSize': sz.text + 'px', '--textColor': clr }">
-      {{ text }}
+    <p
+      class="textLabel"
+      :style="{ '--textSize': labelAttr.size.text + 'px', '--textColor': labelAttr.color }"
+    >
+      {{ labelAttr.text }}
     </p>
   </div>
 
   <div
-    class="iconTextContainer"
+    class="inputTextContainer"
     :style="{
       '--labelMt': myMargin.top + 'px',
       '--labelMb': myMargin.bottom + 'px',
@@ -37,20 +44,24 @@
       '--labelPl': myPadding.left + 'px',
       '--labelPr': myPadding.right + 'px',
       '--borderRadius': borderRadius + 'px',
-      '--backgroundColor': myBgColor,
-      '--hoverBgColor': myHoverBgColor
+      '--backgroundColor': myBgColor
     }"
     v-else-if="mode === 'input'"
   >
-    <div class="iconTSp" :style="{ '--iconTextSpace': iconTextSp + 'px' }">
-      <font-awesome-icon :icon="['fas', props.icon.name]" :size="sz.icon" :style="{ color: clr }" />
+    <div class="iconTSp" :style="{ '--iconTextSpace': labelAttr.iconTextSp + 'px' }">
+      <font-awesome-icon
+        :icon="[props.icon.type, props.icon.name]"
+        :size="labelAttr.size.icon"
+        :style="{ color: labelAttr.color }"
+      />
     </div>
     <input
       class="inputLabel"
       :placeholder="placeholder"
       :style="{
-        '--textSize': (Number(sz.text) + iconTextSp + myPadding.left).toString() + 'px',
-        '--textColor': clr
+        '--textSize':
+          (Number(labelAttr.size.text) + labelAttr.iconTextSp + myPadding.left).toString() + 'px',
+        '--textColor': labelAttr.color
       }"
     />
   </div>
@@ -58,7 +69,24 @@
 
 <script setup>
 import { ref } from "vue"
-
+const sizeMap = new Map([
+  ["2xs", "8"],
+  ["xs", "10"],
+  ["sm", "14"],
+  ["lg", "18"],
+  ["xl", "20"],
+  ["2xl", "28"],
+  ["1x", "12.8"],
+  ["2x", "24"],
+  ["3x", "40"],
+  ["4x", "56"],
+  ["5x", "72"],
+  ["6x", "88"],
+  ["7x", "104"],
+  ["8x", "120"],
+  ["9x", "136"],
+  ["10x", "152"]
+])
 const props = defineProps({
   icon: { type: Object, name: Object },
   margin: {
@@ -86,50 +114,30 @@ const props = defineProps({
   hoverBgColor: String,
   mode: String,
   placeholder: String,
-  modelValue: String
 })
 
-const text = ref(props.text ? props.text : "")
-var sizeMap = new Map([
-  ["2xs", "8"],
-  ["xs", "10"],
-  ["sm", "14"],
-  ["lg", "18"],
-  ["xl", "20"],
-  ["2xl", "28"],
-  ["1x", "12.8"],
-  ["2x", "24"],
-  ["3x", "40"],
-  ["4x", "56"],
-  ["5x", "72"],
-  ["6x", "88"],
-  ["7x", "104"],
-  ["8x", "120"],
-  ["9x", "136"],
-  ["10x", "152"]
-])
-const sz = ref(
-  props.size
-    ? {
-        icon: props.size,
-        text: sizeMap.get(props.size)
-      }
-    : { icon: "xl", text: "20" }
-)
-const clr = ref(props.iconColor ? props.color : "white")
+const labelAttr = ref({
+  text: props.text ? props.text : "",
+  size: props.size
+    ? { icon: props.size, text: sizeMap.get(props.size) }
+    : { icon: "xl", text: "20" },
+  color: props.iconColor ? props.color : "white",
+  iconTextSp: props.iconTextSpace ? props.iconTextSpace : 10
+})
+
 let myBgColor = ref(null)
-if (props.mode !== "label") {
+let myHoverBgColor = ref(null)
+if (props.mode === "input") {
   myBgColor = ref(props.bgColor ? props.bgColor : "#4A4A4A")
-}
-let myHoverBgColor = ref(myBgColor.value)
-if (props.mode === "button") {
+} else if (props.mode === "button") {
+  myBgColor = ref(props.bgColor ? props.bgColor : "#4A4A4A")
   myHoverBgColor = ref(props.hoverBgColor ? props.hoverBgColor : "#93a1e9")
 }
 const borderRadius = ref(props.borderRadius ? props.borderRadius : 5)
-const iconTextSp = ref(props.iconTextSpace ? props.iconTextSpace : 10)
-const placeholder = ref(props.placeholder ? props.placeholder : "")
 const myMargin = ref({ bottom: 0, top: 0, left: 0, right: 0 })
 const myPadding = ref({ bottom: 0, top: 0, left: 0, right: 0 })
+
+const placeholder = ref(props.placeholder ? props.placeholder : "")
 
 if (props.margin) {
   myMargin.value = {
@@ -182,7 +190,7 @@ const onChange = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .iconTextContainer {
   display: flex;
   align-items: center;
@@ -190,12 +198,19 @@ const onChange = () => {
   padding: var(--labelPt) var(--labelPr) var(--labelPb) var(--labelPl);
   background-color: var(--backgroundColor);
   border-radius: var(--borderRadius);
-}
 
-.iconTextContainer:hover {
-  background-color: var(--hoverBgColor);
+  &:hover {
+    background-color: var(--hoverBgColor);
+  }
 }
-
+.inputTextContainer {
+  display: flex;
+  align-items: center;
+  margin: var(--labelMt) var(--labelMr) var(--labelMb) var(--labelMl);
+  padding: var(--labelPt) var(--labelPr) var(--labelPb) var(--labelPl);
+  background-color: var(--backgroundColor);
+  border-radius: var(--borderRadius);
+}
 .iconTSp {
   margin-right: var(--iconTextSpace);
 }
@@ -208,8 +223,9 @@ const onChange = () => {
   border: none;
   background-color: transparent;
   color: var(--textColor);
-}
-.inputLabel:focus {
-  outline: none;
+
+  &:focus{
+    outline: none;
+  }
 }
 </style>
