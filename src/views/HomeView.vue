@@ -4,32 +4,25 @@
   </div>
   <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
     <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
-      <div class="title">Nodon</div>
-
       <IconLabel
         :mode="'label'"
-        :icon="{ type: 'fas', name: 'house' }"
-        :text="'ホーム'"
-        :margin="{ vertical: 20 }"
-        :padding="{ left: 10, vertical: 5 }"
-      />
-
-      <IconLabel
-        :mode="'input'"
-        :icon="{ type: 'fas', name: 'envelope' }"
-        :margin="{ vertical: 30, right: 30 }"
-        :padding="{ left: 10, vertical: 5 }"
-        :placeholder="'Enter message'"
-        @input="onInput"
+        :icon="{ type: 'fas', name: 'leaf' }"
+        :text="'Nodon'"
+        :size="'2xl'"
+        :margin="{ vertical: 25 }"
+        :padding="{ left: 20 }"
+        :iconTextSpace="20"
       />
 
       <IconLabel
         :mode="'button'"
         :icon="{ type: 'fas', name: 'magnifying-glass' }"
         :text="'検索'"
-        :margin="{ right: 20 }"
-        :padding="{ left: 10, vertical: 10 }"
+        :margin="{ horizontal: 20 }"
+        :padding="{ left: 15, vertical: 8 }"
+        :borderRadius="30"
         @onChange="onChange"
+        :args="{title:'sadasd'}"
       />
     </div>
 
@@ -43,7 +36,6 @@
       >
         未完成信箱認證
       </button>
-      <h3 class="text-white">Count:{{ count }}</h3>
 
       <button v-bind:class="[customizeStyle()]" @click="showModal">
         {{ "showModal" }}
@@ -78,8 +70,6 @@ import Loading from "@/components/Customizeloading.vue"
 import Modal from "../components/CustomizeModal.vue"
 import IconLabel from "../components/CustomizeIconLabel.vue"
 
-const count = ref(0)
-
 //ロディングフラグ
 const isLoading = ref(true)
 const modalIsOpen = ref(false)
@@ -104,8 +94,8 @@ const onInput = (e) => {
   console.log(e.target.value)
 }
 
-const onChange = () => {
-  console.log("button clicked")
+const onChange = (data) => {
+  console.log("button clicked", data)
 }
 
 /**

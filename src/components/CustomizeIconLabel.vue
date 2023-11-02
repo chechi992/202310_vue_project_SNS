@@ -95,6 +95,7 @@ const props = defineProps({
     left: Number,
     right: Number,
     vertical: Number,
+    horizontal: Number,
     all: Number
   },
   padding: {
@@ -103,6 +104,7 @@ const props = defineProps({
     left: Number,
     right: Number,
     vertical: Number,
+    horizontal: Number,
     all: Number
   },
   size: String,
@@ -114,6 +116,7 @@ const props = defineProps({
   hoverBgColor: String,
   mode: String,
   placeholder: String,
+  args: Object
 })
 
 const labelAttr = ref({
@@ -122,7 +125,7 @@ const labelAttr = ref({
     ? { icon: props.size, text: sizeMap.get(props.size) }
     : { icon: "xl", text: "20" },
   color: props.iconColor ? props.color : "white",
-  iconTextSp: props.iconTextSpace ? props.iconTextSpace : 10
+  iconTextSp: props.iconTextSpace ? props.iconTextSpace : 13
 })
 
 let myBgColor = ref(null)
@@ -151,13 +154,20 @@ if (props.margin) {
       bottom: props.margin.vertical
     }
   }
+  if (props.margin.horizontal) {
+    myMargin.value = {
+      ...myMargin.value,
+      left: props.margin.horizontal,
+      right: props.margin.horizontal
+    }
+  }
   if (props.margin.all) {
     myMargin.value = {
       ...myMargin.value,
-      top: props.margin.vertical,
-      bottom: props.margin.vertical,
-      left: props.margin.vertical,
-      right: props.margin.vertical
+      top: props.margin.all,
+      bottom: props.margin.all,
+      left: props.margin.all,
+      right: props.margin.all
     }
   }
 }
@@ -165,6 +175,13 @@ if (props.padding) {
   myPadding.value = {
     ...myPadding.value,
     ...props.padding
+  }
+  if (props.padding.horizontal) {
+    myMargin.value = {
+      ...myPadding.value,
+      left: props.padding.horizontal,
+      right: props.padding.horizontal
+    }
   }
   if (props.padding.vertical) {
     myPadding.value = {
@@ -186,7 +203,7 @@ if (props.padding) {
 
 const emit = defineEmits(["onChange"])
 const onChange = () => {
-  emit("onChange")
+  emit("onChange", props.args)
 }
 </script>
 
@@ -224,7 +241,7 @@ const onChange = () => {
   background-color: transparent;
   color: var(--textColor);
 
-  &:focus{
+  &:focus {
     outline: none;
   }
 }
