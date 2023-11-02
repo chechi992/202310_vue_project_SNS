@@ -59,9 +59,10 @@
       class="inputLabel"
       :placeholder="placeholder"
       :style="{
-        '--textSize':
+        '--textWidth':
           (Number(labelAttr.size.text) + labelAttr.iconTextSp + myPadding.left).toString() + 'px',
-        '--textColor': labelAttr.color
+        '--textColor': labelAttr.color,
+        '--textSize': labelAttr.size.text + 'px'
       }"
     />
   </div>
@@ -70,13 +71,13 @@
 <script setup>
 import { ref } from "vue"
 const sizeMap = new Map([
-  ["2xs", "8"],
-  ["xs", "10"],
-  ["sm", "14"],
-  ["lg", "18"],
-  ["xl", "20"],
-  ["2xl", "28"],
-  ["1x", "12.8"],
+  ["2xs", "10"],
+  ["xs", "12"],
+  ["sm", "16"],
+  ["lg", "20"],
+  ["xl", "22"],
+  ["2xl", "32"],
+  ["1x", "16"],
   ["2x", "24"],
   ["3x", "40"],
   ["4x", "56"],
@@ -123,7 +124,7 @@ const labelAttr = ref({
   text: props.text ? props.text : "",
   size: props.size
     ? { icon: props.size, text: sizeMap.get(props.size) }
-    : { icon: "xl", text: "20" },
+    : { icon: "xl", text: sizeMap.get("xl") },
   color: props.iconColor ? props.color : "white",
   iconTextSp: props.iconTextSpace ? props.iconTextSpace : 13
 })
@@ -236,11 +237,11 @@ const onChange = () => {
   color: var(--textColor);
 }
 .inputLabel {
-  width: calc(100% - var(--textSize));
+  width: calc(100% - var(--textWidth));
   border: none;
   background-color: transparent;
   color: var(--textColor);
-
+  font-size: var(--textSize);
   &:focus {
     outline: none;
   }
