@@ -45,7 +45,7 @@
         :mode="'input'"
         :icon="{ type: 'fas', name: 'envelope' }"
         :margin="{ vertical: 30, right: 30 }"
-        :padding="{ all: 10 }"
+        :padding="{ all: 5 }"
         :placeholder="'Enter message'"
         @input="onInput"
       />

@@ -62,7 +62,7 @@
         '--textWidth':
           (Number(labelAttr.size.text) + labelAttr.iconTextSp + myPadding.left).toString() + 'px',
         '--textColor': labelAttr.color,
-        '--textSize': labelAttr.size.text + 'px'
+        '--textSize': labelAttr.size.text - 3 + 'px'
       }"
     />
   </div>
@@ -124,7 +124,7 @@ const labelAttr = ref({
   text: props.text ? props.text : "",
   size: props.size
     ? { icon: props.size, text: sizeMap.get(props.size) }
-    : { icon: "xl", text: sizeMap.get("xl") },
+    : { icon: "lg", text: sizeMap.get("lg") },
   color: props.iconColor ? props.color : "white",
   iconTextSp: props.iconTextSpace ? props.iconTextSpace : 13
 })
@@ -144,9 +144,14 @@ const myPadding = ref({ bottom: 0, top: 0, left: 0, right: 0 })
 const placeholder = ref(props.placeholder ? props.placeholder : "")
 
 if (props.margin) {
-  myMargin.value = {
-    ...myMargin.value,
-    ...props.margin
+  if (props.margin.all) {
+    myMargin.value = {
+      ...myMargin.value,
+      top: props.margin.all,
+      bottom: props.margin.all,
+      left: props.margin.all,
+      right: props.margin.all
+    }
   }
   if (props.margin.vertical) {
     myMargin.value = {
@@ -162,20 +167,20 @@ if (props.margin) {
       right: props.margin.horizontal
     }
   }
-  if (props.margin.all) {
-    myMargin.value = {
-      ...myMargin.value,
-      top: props.margin.all,
-      bottom: props.margin.all,
-      left: props.margin.all,
-      right: props.margin.all
-    }
+  myMargin.value = {
+    ...myMargin.value,
+    ...props.margin
   }
 }
 if (props.padding) {
-  myPadding.value = {
-    ...myPadding.value,
-    ...props.padding
+  if (props.padding.all) {
+    myPadding.value = {
+      ...myPadding.value,
+      top: props.padding.all,
+      bottom: props.padding.all,
+      left: props.padding.all,
+      right: props.padding.all
+    }
   }
   if (props.padding.horizontal) {
     myMargin.value = {
@@ -191,14 +196,9 @@ if (props.padding) {
       bottom: props.padding.vertical
     }
   }
-  if (props.padding.all) {
-    myPadding.value = {
-      ...myPadding.value,
-      top: props.padding.all,
-      bottom: props.padding.all,
-      left: props.padding.all,
-      right: props.padding.all
-    }
+  myPadding.value = {
+    ...myPadding.value,
+    ...props.padding
   }
 }
 
