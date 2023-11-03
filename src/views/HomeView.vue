@@ -13,13 +13,12 @@
         :padding="{ left: 20 }"
         :iconTextSpace="20"
       />
-
       <template v-for="item in leftBarItems" :key="item.icon.name">
         <IconLabel
           :mode="'button'"
           :icon="item.icon"
           :text="item.text"
-          :margin="{ horizontal: 20, vertical: 30 }"
+          :margin="{ all:20 }"
           :padding="{ left: 15, vertical: 8 }"
           :borderRadius="30"
           @onChange="onChange"
@@ -27,6 +26,7 @@
           :bgColor="'transparent'"
         />
       </template>
+      
     </div>
 
     <div class="w-[750px] h-screen ml-[250px]">
