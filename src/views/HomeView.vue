@@ -14,16 +14,19 @@
         :iconTextSpace="20"
       />
 
-      <IconLabel
-        :mode="'button'"
-        :icon="{ type: 'fas', name: 'magnifying-glass' }"
-        :text="'検索'"
-        :margin="{ horizontal: 20 }"
-        :padding="{ left: 15, vertical: 8 }"
-        :borderRadius="30"
-        @onChange="onChange"
-        :args="{title:'sadasd'}"
-      />
+      <template v-for="item in leftBarItems" :key="item.icon.name">
+        <IconLabel
+          :mode="'button'"
+          :icon="item.icon"
+          :text="item.text"
+          :margin="{ horizontal: 20, vertical: 30 }"
+          :padding="{ left: 15, vertical: 8 }"
+          :borderRadius="30"
+          @onChange="onChange"
+          :args="item.args"
+          :bgColor="'transparent'"
+        />
+      </template>
     </div>
 
     <div class="w-[750px] h-screen ml-[250px]">
@@ -73,12 +76,33 @@ import IconLabel from "../components/CustomizeIconLabel.vue"
 //ロディングフラグ
 const isLoading = ref(true)
 const modalIsOpen = ref(false)
+const leftBarItems = ref([
+  {
+    icon: { type: "fas", name: "house" },
+    text: "ホーム",
+    args: { message: "ホーム" }
+  },
+  {
+    icon: { type: "fas", name: "magnifying-glass" },
+    text: "検索",
+    args: { message: "検索" }
+  },
+    {
+    icon: { type: "fas", name: "users-line" },
+    text: "看板",
+    args: { message: "看板" }
+  },
+      {
+    icon: { type: "fas", name: "ghost" },
+    text: "お知らせ",
+    args: { message: "お知らせ" }
+  },
+])
 
 //カスタマイズ
 const customizeStyle = () => {
   return "text-white " + "m-[10px] " + "p-[10px] " + "rounded-md " + "bg-[#f43f5e] " + "h-[100px]"
 }
-
 const marginstyle = ref("0 0 0 20px")
 
 onMounted(() => {

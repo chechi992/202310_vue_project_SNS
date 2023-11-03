@@ -12,7 +12,8 @@
       '--labelPr': myPadding.right + 'px',
       '--borderRadius': borderRadius + 'px',
       '--backgroundColor': myBgColor,
-      '--hoverBgColor': myHoverBgColor
+      '--hoverBgColor': myHoverBgColor,
+      '--hoverPointer': cursortype
     }"
     @click="onChange"
     v-if="mode === 'button' || mode === 'label'"
@@ -125,15 +126,17 @@ const labelAttr = ref({
   size: props.size
     ? { icon: props.size, text: sizeMap.get(props.size) }
     : { icon: "lg", text: sizeMap.get("lg") },
-  color: props.iconColor ? props.color : "white",
+  color: props.color ? props.color : "white",
   iconTextSp: props.iconTextSpace ? props.iconTextSpace : 13
 })
 
 let myBgColor = ref(null)
 let myHoverBgColor = ref(null)
+let cursortype =ref('default')
 if (props.mode === "input") {
   myBgColor = ref(props.bgColor ? props.bgColor : "#4A4A4A")
 } else if (props.mode === "button") {
+  cursortype.value ='pointer';
   myBgColor = ref(props.bgColor ? props.bgColor : "#4A4A4A")
   myHoverBgColor = ref(props.hoverBgColor ? props.hoverBgColor : "#93a1e9")
 }
@@ -219,6 +222,7 @@ const onChange = () => {
 
   &:hover {
     background-color: var(--hoverBgColor);
+    cursor: var(--hoverPointer);
   }
 }
 .inputTextContainer {
