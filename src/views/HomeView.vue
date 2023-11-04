@@ -2,34 +2,75 @@
   <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center">
     <Loading />
   </div>
-  <div v-show="!isLoading" class="w-[1250px] m-auto p-0 flex">
-    <div class="w-[250px] border-r-[1px] border-gray_800 h-screen fixed">
-      <IconLabel
-        :mode="'label'"
-        :icon="{ type: 'fas', name: 'leaf' }"
-        :text="'Nodon'"
-        :size="'2xl'"
-        :margin="{ vertical: 25 }"
-        :padding="{ left: 20 }"
-        :iconTextSpace="20"
-      />
-      <template v-for="item in leftBarItems" :key="item.icon.name">
+  <div v-show="!isLoading" class="mainBar">
+    <div class="leftBar">
+      <div v-if="leftBarForPC" class="leftTop">
         <IconLabel
-          :mode="'button'"
-          :icon="item.icon"
-          :text="item.text"
-          :margin="{ all:20 }"
-          :padding="{ left: 15, vertical: 8 }"
-          :borderRadius="30"
-          @onChange="onChange"
-          :args="item.args"
-          :bgColor="'transparent'"
+          v-if="leftBarForPC"
+          :mode="'label'"
+          :icon="{ type: 'fas', name: 'leaf' }"
+          :text="'Nodon'"
+          :size="'2xl'"
+          :margin="{ vertical: 25 }"
+          :padding="{ left: 20 }"
+          :iconTextSpace="20"
         />
-      </template>
-      
+        <template v-for="item in leftBarItems" :key="item.icon.name">
+          <IconLabel
+            v-if="leftBarForPC"
+            :mode="'button'"
+            :icon="item.icon"
+            :text="item.text"
+            :margin="{ all: 20 }"
+            :padding="{ left: 15, vertical: 8 }"
+            :borderRadius="30"
+            @onChange="onChange"
+            :args="item.args"
+            :bgColor="'transparent'"
+          />
+        </template>
+      </div>
+      <div v-if="leftBarForPC" class="leftBottom" @click="showSettingBar">
+        <div v-if="leftBarForPC" class="userIcon" />
+        <div v-if="leftBarForPC" class="userInfoBar">
+          <p v-if="leftBarForPC">userName</p>
+          <p v-if="leftBarForPC">qqqq@gmail.comasdasdasd</p>
+        </div>
+        <font-awesome-icon v-if="leftBarForPC" icon="ellipsis" :style="{ color: 'white' }" />
+      </div>
+      <div v-if="!leftBarForPC" class="leftTopForSmallSize">
+        <font-awesome-icon class="title" icon="leaf" :size="'2xl'" :style="{ color: 'white' }" />
+        <template v-for="item in leftBarItems" :key="item.icon.name">
+          <font-awesome-icon
+            class="icon"
+            :icon="[item.icon.type, item.icon.name]"
+            :size="'xl'"
+            :style="{ color: 'white' }"
+            @click="onChange(item.args)"
+          />
+        </template>
+      </div>
+      <div v-if="!leftBarForPC" class="leftBottomForSmallSize">
+        <div class="userIcon" @click="showSettingBar" />
+      </div>
+      <div v-show="settingBarIsOpen" class="settingBar">
+        <template v-for="item in settingBarItems" :key="item.icon.name">
+          <IconLabel
+            :mode="'button'"
+            :icon="item.icon"
+            :text="item.text"
+            :margin="{ top: 15 }"
+            :padding="{ left: 40 }"
+            :size="'sm'"
+            @onChange="onChange"
+            :args="item.args"
+            :bgColor="'transparent'"
+          />
+        </template>
+      </div>
     </div>
 
-    <div class="w-[750px] h-screen ml-[250px]">
+    <div class="middleBar">
       <button :class="[customizeStyle()]" @click="toSettingView">toSettingPage</button>
       <button :class="[customizeStyle()]" @click="signOut">Sign out</button>
       <button
@@ -51,11 +92,12 @@
         :padding="{ all: 5 }"
         :placeholder="'Enter message'"
         @input="onInput"
+        :borderRadius="5"
       />
       <div class="w-[150px] ml-[100px] bg-tahiti py-96">asdsadsa</div>
     </div>
 
-    <div class="w-[150px] h-screen fixed ml-[1000px] border-l-[1px] border-gray_800">asdsadsa</div>
+    <div class="rightBar">asdsadsa</div>
   </div>
   <Modal
     :modalIsOpen="modalIsOpen"
@@ -75,6 +117,7 @@ import IconLabel from "../components/CustomizeIconLabel.vue"
 
 //ロディングフラグ
 const isLoading = ref(true)
+const settingBarIsOpen = ref(false)
 const modalIsOpen = ref(false)
 const leftBarItems = ref([
   {
@@ -87,17 +130,31 @@ const leftBarItems = ref([
     text: "検索",
     args: { message: "検索" }
   },
-    {
+  {
     icon: { type: "fas", name: "users-line" },
     text: "看板",
     args: { message: "看板" }
   },
-      {
-    icon: { type: "fas", name: "ghost" },
+  {
+    icon: { type: "fas", name: "comment" },
     text: "お知らせ",
     args: { message: "お知らせ" }
-  },
+  }
 ])
+const settingBarItems = ref([
+  {
+    icon: { type: "fas", name: "user-gear" },
+    text: "個人情報設定",
+    args: { message: "個人情報設定" }
+  },
+  {
+    icon: { type: "fas", name: "right-from-bracket" },
+    text: "ログアウト",
+    args: { message: "ログアウト" }
+  }
+])
+
+const leftBarForPC = ref(true)
 
 //カスタマイズ
 const customizeStyle = () => {
@@ -105,9 +162,19 @@ const customizeStyle = () => {
 }
 const marginstyle = ref("0 0 0 20px")
 
-onMounted(() => {
+onMounted(async () => {
   console.log("User is logined:", store.state.userInfo)
   isLoading.value = false
+
+  store.commit("getScreenInfo")
+  store.state.screenInfo.width >= 1200 ? (leftBarForPC.value = true) : (leftBarForPC.value = false)
+
+  window.addEventListener("resize", () => {
+    store.commit("getScreenInfo")
+    store.state.screenInfo.width >= 1200
+      ? (leftBarForPC.value = true)
+      : (leftBarForPC.value = false)
+  })
 })
 
 const showModal = () => {
@@ -122,6 +189,9 @@ const onChange = (data) => {
   console.log("button clicked", data)
 }
 
+const showSettingBar = () => {
+  settingBarIsOpen.value = !settingBarIsOpen.value
+}
 /**
  * ユーザログアウト
  */
@@ -138,3 +208,111 @@ const toSettingView = () => {
   router.push({ name: "UserSettingPage", params: { user: "taro", age: 33 } })
 }
 </script>
+
+<style scoped lang="scss">
+.mainBar {
+  width: 1250px;
+  margin: auto;
+  padding: 0px;
+  display: flex;
+}
+.leftBar {
+  width: 250px;
+  border-right: solid 1px rgb(81, 80, 80);
+  height: 100%;
+  position: fixed;
+
+  .settingBar {
+    width: 220px;
+    height: 90px;
+    background-color: rgb(61, 61, 61);
+    border-radius: 10px;
+    position: absolute;
+    left: 25px;
+    bottom: 70px;
+  }
+}
+.leftTop,
+.leftTopForSmallSize {
+  height: calc(100% - 60px);
+  min-height: 310px;
+  display: flex;
+  flex-direction: column;
+  .title {
+    width: 50px;
+    margin: 20px 0 30px 0px;
+  }
+  .icon {
+    width: 50px;
+    height: 30px;
+    padding: 10px 0;
+    margin: 10px 0;
+    border-radius: 25px;
+    &:hover {
+      cursor: pointer;
+      background-color: rgb(85, 85, 85);
+    }
+  }
+}
+.leftBottom,
+.leftBottomForSmallSize {
+  height: 55px;
+  display: flex;
+  align-items: center;
+  border-radius: 40px;
+  margin: 0 20px 0 20px;
+  &:hover {
+    cursor: pointer;
+    background-color: rgb(85, 85, 85);
+  }
+  .userIcon {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(47, 153, 228);
+    border-radius: 20px;
+    margin: 0 10px 0 10px;
+  }
+  .userInfoBar {
+    width: calc(100% - 90px);
+    margin-right: 5px;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: white;
+      font-size: 14px;
+    }
+    p:nth-child(2) {
+      color: rgb(146, 145, 145);
+    }
+  }
+}
+.middleBar {
+  width: 750px;
+  height: 100%;
+  margin-left: 250px;
+}
+.rightBar {
+  width: 150px;
+  height: 100%;
+  margin-left: 1000px;
+  border-left: solid 1px rgb(66, 65, 65);
+  position: fixed;
+}
+@media (max-width: 1200px) {
+  .mainBar {
+    width: 850px;
+  }
+  .leftBar {
+    width: 100px;
+  }
+  .leftTopForSmallSize {
+    align-items: center;
+  }
+  .middleBar {
+    margin-left: 100px;
+  }
+  .rightBar {
+    margin-left: 850px;
+  }
+}
+</style>
