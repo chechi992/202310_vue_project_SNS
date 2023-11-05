@@ -31,16 +31,16 @@
         </template>
       </div>
       <div v-if="leftBarForPC" class="leftBottom" @click="showSettingBar">
-        <div v-if="leftBarForPC" class="userIcon" />
-        <div v-if="leftBarForPC" class="userInfoBar">
-          <p v-if="leftBarForPC">userName</p>
-          <p v-if="leftBarForPC">qqqq@gmail.comasdasdasd</p>
+        <div class="userIcon" />
+        <div class="userInfoBar">
+          <p>userName</p>
+          <p>qqqq@gmail.comasdasdasd</p>
         </div>
-        <font-awesome-icon v-if="leftBarForPC" icon="ellipsis" :style="{ color: 'white' }" />
+        <font-awesome-icon icon="ellipsis" :style="{ color: 'white' }" />
       </div>
       <div v-if="!leftBarForPC" class="leftTopForSmallSize">
         <font-awesome-icon class="title" icon="leaf" :size="'2xl'" :style="{ color: 'white' }" />
-        <template v-for="item in leftBarItems" :key="item.icon.name">
+        <div v-for="item in leftBarItems" :key="item.icon.name" ref="smallSizeIcons">
           <font-awesome-icon
             class="icon"
             :icon="[item.icon.type, item.icon.name]"
@@ -48,7 +48,10 @@
             :style="{ color: 'white' }"
             @click="onChange(item.args)"
           />
-        </template>
+          <div v-show="item.focus" class="itemsHint" :style="{ '--pos': item.pos + 'px' }">
+            {{ item.text }}
+          </div>
+        </div>
       </div>
       <div v-if="!leftBarForPC" class="leftBottomForSmallSize">
         <div class="userIcon" @click="showSettingBar" />
@@ -62,8 +65,7 @@
             :margin="{ top: 15 }"
             :padding="{ left: 40 }"
             :size="'sm'"
-            @onChange="onChange"
-            :args="item.args"
+            @onChange="item.onChange"
             :bgColor="'transparent'"
           />
         </template>
@@ -71,17 +73,18 @@
     </div>
 
     <div class="middleBar">
-      <button :class="[customizeStyle()]" @click="toSettingView">toSettingPage</button>
-      <button :class="[customizeStyle()]" @click="signOut">Sign out</button>
       <button
         class="text-white"
-        :style="{ margin: marginstyle, backgroundColor: '#673AB7', padding: marginstyle }"
+        :style="{ margin: '0 0 0 20px', backgroundColor: '#673AB7', padding: '0 0 0 20px' }"
         v-if="!store.state.userInfo.emailVerified"
       >
         未完成信箱認證
       </button>
 
-      <button v-bind:class="[customizeStyle()]" @click="showModal">
+      <button
+        v-bind:class="'text-white m-[10px] p-[10px] rounded-md bg-[#f43f5e] h-[100px]'"
+        @click="showModal"
+      >
         {{ "showModal" }}
       </button>
 
@@ -110,7 +113,7 @@
 <script setup>
 import store from "../store"
 import router from "../router"
-import { ref, onMounted } from "vue"
+import { ref, onMounted, onUpdated } from "vue"
 import Loading from "@/components/Customizeloading.vue"
 import Modal from "../components/CustomizeModal.vue"
 import IconLabel from "../components/CustomizeIconLabel.vue"
@@ -123,58 +126,82 @@ const leftBarItems = ref([
   {
     icon: { type: "fas", name: "house" },
     text: "ホーム",
-    args: { message: "ホーム" }
+    args: { message: "ホーム" },
+    pos: 145,
+    focus: false
   },
   {
     icon: { type: "fas", name: "magnifying-glass" },
     text: "検索",
-    args: { message: "検索" }
+    args: { message: "検索" },
+    pos: 215,
+    focus: false
   },
   {
     icon: { type: "fas", name: "users-line" },
     text: "看板",
-    args: { message: "看板" }
+    args: { message: "看板" },
+    pos: 285,
+    focus: false
   },
   {
     icon: { type: "fas", name: "comment" },
     text: "お知らせ",
-    args: { message: "お知らせ" }
+    args: { message: "お知らせ" },
+    pos: 355,
+    focus: false
   }
 ])
 const settingBarItems = ref([
   {
     icon: { type: "fas", name: "user-gear" },
     text: "個人情報設定",
-    args: { message: "個人情報設定" }
+    onChange: () => {
+      toSettingView()
+      console.log("個人情報設定")
+    }
   },
   {
     icon: { type: "fas", name: "right-from-bracket" },
     text: "ログアウト",
-    args: { message: "ログアウト" }
+    onChange: () => {
+      signOut()
+      console.log("ログアウト")
+    }
   }
 ])
-
-const leftBarForPC = ref(true)
-
-//カスタマイズ
-const customizeStyle = () => {
-  return "text-white " + "m-[10px] " + "p-[10px] " + "rounded-md " + "bg-[#f43f5e] " + "h-[100px]"
-}
-const marginstyle = ref("0 0 0 20px")
+const smallSizeIcons = ref(null)
+const leftBarForPC = ref(store.state.screenInfo.width >= 1200 ? true : false)
+const listenerIsEvent = ref(false)
 
 onMounted(async () => {
   console.log("User is logined:", store.state.userInfo)
   isLoading.value = false
-
-  store.commit("getScreenInfo")
-  store.state.screenInfo.width >= 1200 ? (leftBarForPC.value = true) : (leftBarForPC.value = false)
-
   window.addEventListener("resize", () => {
     store.commit("getScreenInfo")
-    store.state.screenInfo.width >= 1200
-      ? (leftBarForPC.value = true)
-      : (leftBarForPC.value = false)
+    if (store.state.screenInfo.width >= 1200) {
+      listenerIsEvent.value = false
+      leftBarForPC.value = true
+    } else {
+      leftBarForPC.value = false
+    }
   })
+})
+
+onUpdated(() => {
+  if (!leftBarForPC.value && !listenerIsEvent.value) {
+    for (let i = 0; i < smallSizeIcons.value.length; i++) {
+      let barItemsPos = smallSizeIcons.value[i].firstChild.getBoundingClientRect().bottom + 5
+      if (leftBarItems.value[i].pos !== barItemsPos) leftBarItems.value[i].pos = barItemsPos
+      smallSizeIcons.value[i].firstChild.addEventListener("mouseenter", () => {
+        leftBarItems.value[i].focus = true
+      })
+      smallSizeIcons.value[i].firstChild.addEventListener("mouseleave", () => {
+        leftBarItems.value[i].focus = false
+      })
+    }
+    listenerIsEvent.value = true
+  }
 })
 
 const showModal = () => {
@@ -246,12 +273,27 @@ const toSettingView = () => {
     width: 50px;
     height: 30px;
     padding: 10px 0;
-    margin: 10px 0;
+    margin: 5px 0 25px 0px;
     border-radius: 25px;
+    // background-color: rgb(85, 85, 85);
     &:hover {
       cursor: pointer;
       background-color: rgb(85, 85, 85);
     }
+  }
+  .itemsHint {
+    width: 50px;
+    height: 23px;
+    background-color: #4e4d4d;
+    position: absolute;
+    top: var(--pos);
+    border-radius: 5px;
+    font-size: 10px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 600;
+    display: flex;
   }
 }
 .leftBottom,

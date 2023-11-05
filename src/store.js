@@ -7,7 +7,7 @@ const store = createStore({
     userInfo: { uid: "", name: "", email: "", isEmailVerified: false },
     AuthService: new AuthService(),
     FbService: new FbService(),
-    screenInfo: { width: 0, height: 0 }
+    screenInfo: { width: window.innerWidth, height: window.innerHeight }
   },
   mutations: {
     getScreenInfo(state) {
