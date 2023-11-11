@@ -1,7 +1,11 @@
 import { setDoc, doc } from "firebase/firestore"
 import { db, auth } from "../firebaseConfig"
-import { createUserWithEmailAndPassword, sendEmailVerification,
-  signInWithEmailAndPassword, signOut } from "firebase/auth"
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth"
 import { loginErrStrings } from "../globalStrings"
 
 export class AuthService {
@@ -13,29 +17,30 @@ export class AuthService {
   registerAccount = async (userInfo) => {
     console.log("AuthService Register start", userInfo)
     let isRegisterSucessfull = false
-    const registerResult = await createUserWithEmailAndPassword(auth, userInfo.value.email, userInfo.value.pwd)
-      console.log("AuthService Register successfull", registerResult.user)
+    const registerResult = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.pwd)
+    console.log("AuthService Register successfull", registerResult.user)
+    if (registerResult.user) {
       //增加userID進去firestore
       const userRef = doc(db, "users", registerResult.user.uid)
       const userDoc = {
-        UID: registerResult.user.uid,
-        name: userInfo.value.name,
-        email: userInfo.value.email
+        name: userInfo.name,
+        email: userInfo.email,
+        photoUrl: "",
+        followUsersUid: [],
+        friendsUid:[],
       }
       await setDoc(userRef, userDoc)
-        .then(() => {
-          isRegisterSucessfull = registerResult.user
-        })
-
+      isRegisterSucessfull = { email: userInfo.email, pwd: userInfo.pwd }
+    }
     console.log("AuthService Register end", isRegisterSucessfull)
     return isRegisterSucessfull
   }
 
- /**
- *ログイン際に取ったエラーメッセージを加工する
- * @param errCode エラーメッセージ
- */
-  #errMsgResult = (errMsg) => { 
+  /**
+   *ログイン際に取ったエラーメッセージを加工する
+   * @param errCode エラーメッセージ
+   */
+  #errMsgResult = (errMsg) => {
     const errObject = new Map([
       ["auth/invalid-email", loginErrStrings.INVALIDEMAIL],
       ["auth/user-not-found", loginErrStrings.NOTFOUNDUSER],
@@ -54,7 +59,7 @@ export class AuthService {
   singnInAccount = async (loginInfo) => {
     console.log("AuthService SignIn start", loginInfo)
     let result
-    await signInWithEmailAndPassword(auth, loginInfo.value.email, loginInfo.value.pwd)
+    await signInWithEmailAndPassword(auth, loginInfo.email, loginInfo.pwd)
       .then(() => {
         console.log("AuthService SignIn successfully ", auth.currentUser)
         result = auth.currentUser
@@ -81,16 +86,14 @@ export class AuthService {
     return isSignOut
   }
 
-/**
- * アカウント認証メール送る
- * @param currentUser ユーザログインした情報（auth.currentUser） 
- */
-  sendVerificationMail = async (currentUser)=>{
-    sendEmailVerification(currentUser)
-    .then(() => {
+  /**
+   * アカウント認証メール送る
+   * @param currentUser ユーザログインした情報（auth.currentUser）
+   */
+  sendVerificationMail = async (currentUser) => {
+    sendEmailVerification(currentUser).then(() => {
       // 驗證電子郵件已成功發送
       console.log("Verification email sent!")
     })
   }
- 
 }

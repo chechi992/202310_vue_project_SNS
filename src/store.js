@@ -1,27 +1,10 @@
 import { createStore } from "vuex"
-import { AuthService } from "./servcie/AuthService"
-import { FbService } from "./servcie/FbService"
+import { accountState } from "./state/accountState"
 
 const store = createStore({
-  state: {
-    userInfo: { uid: "", name: "", email: "", isEmailVerified: false },
-    AuthService: new AuthService(),
-    FbService: new FbService(),
-    screenInfo: { width: window.innerWidth, height: window.innerHeight }
-  },
-  mutations: {
-    getScreenInfo(state) {
-      state.screenInfo = {
-        ...state.screenInfo,
-        width: window.innerWidth,
-        height: window.innerHeight
-      }
-    },
-    setUserInfo(state, user) {
-      state.userInfo = user
-    }
-  },
-  actions: {}
+  modules: {
+    accountState: accountState
+  }
 })
 
 export default store

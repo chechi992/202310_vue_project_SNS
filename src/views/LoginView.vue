@@ -1,8 +1,11 @@
 <template>
-    <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center" >
-    <customize-loading :size="150" :borderSize="20"/>
+  <div v-show="account.state.isLoading" class="w-screen h-screen flex justify-center items-center">
+    <customize-loading :size="150" :borderSize="20" />
   </div>
-  <div v-show="!isLoading" class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
+  <div
+    v-show="!account.state.isLoading"
+    class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8"
+  >
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h1
         class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
@@ -98,7 +101,7 @@
         </div>
 
         <!-- 錯誤訊息 -->
-        <p v-if="errMsg" class="text-red">{{ errMsg }}</p>
+        <p v-if="account.state.errMessage" class="text-red">{{ account.state.errMessage }}</p>
 
         <a href="##" class="text-right login_forgot_password"
           ><span class="block mt-3 text-sm text-white"> パスワードを忘れた場合 </span></a
@@ -131,14 +134,9 @@ import store from "../store"
 import { ref } from "vue"
 import CustomizeLoading from "@/components/CustomizeLoading.vue"
 
-
 //インプット:ID, Password
 const loginInfo = ref({ email: "", pwd: "" })
-//エラーメッセージ
-const errMsg = ref()
-//ロディングフラグ
-const isLoading = ref(false)
-
+const account = { state: store.state.accountState, path: "accountState/" }
 /**
  * 登録画面遷移へ
  */
@@ -150,17 +148,7 @@ const toRegisterView = () => {
  * ログイン処理する
  */
 const SignIn = () => {
-  isLoading.value = true;
-  store.state.AuthService.singnInAccount(loginInfo)
-  .then((result) => {
-    if (result.uid) {
-      router.push({ name: "HomePage" })
-    } else {
-      errMsg.value = result;
-      console.error("SignIn Err", result)
-      isLoading.value = false;
-    }
-  })
+  store.dispatch(account.path + "login", { loginInfo: loginInfo.value ,mode:'login'})
 }
 </script>
 

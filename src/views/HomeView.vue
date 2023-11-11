@@ -1,8 +1,8 @@
 <template>
-  <div v-show="isLoading" class="w-screen h-screen flex justify-center items-center">
+  <div v-show="account.state.isLoading" class="w-screen h-screen flex justify-center items-center">
     <Loading />
   </div>
-  <div v-show="!isLoading" class="mainBar">
+  <div v-show="!account.state.isLoading" class="mainBar">
     <div class="leftBar">
       <div v-if="leftBarForPC" class="leftTop">
         <IconLabel
@@ -76,7 +76,7 @@
       <button
         class="text-white"
         :style="{ margin: '0 0 0 20px', backgroundColor: '#673AB7', padding: '0 0 0 20px' }"
-        v-if="!store.state.userInfo.emailVerified"
+        v-if="!account.state.accountInfo.emailVerified"
       >
         未完成信箱認證
       </button>
@@ -119,7 +119,6 @@ import Modal from "../components/CustomizeModal.vue"
 import IconLabel from "../components/CustomizeIconLabel.vue"
 
 //ロディングフラグ
-const isLoading = ref(true)
 const settingBarIsOpen = ref(false)
 const modalIsOpen = ref(false)
 const leftBarItems = ref([
@@ -165,21 +164,21 @@ const settingBarItems = ref([
     icon: { type: "fas", name: "right-from-bracket" },
     text: "ログアウト",
     onChange: () => {
-      signOut()
-      console.log("ログアウト")
+      store.dispatch(account.path + "logout")
     }
   }
 ])
+const account = { state: store.state.accountState, path: "accountState/" }
 const smallSizeIcons = ref(null)
-const leftBarForPC = ref(store.state.screenInfo.width >= 1200 ? true : false)
+const leftBarForPC = ref(account.state.screenInfo.width >= 1200 ? true : false)
 const listenerIsEvent = ref(false)
 
 onMounted(async () => {
-  console.log("User is logined:", store.state.userInfo)
-  isLoading.value = false
+  console.log("User is logined:", account.state.accountInfo, "userInfo:", account.state.userInfo)
+
   window.addEventListener("resize", () => {
-    store.commit("getScreenInfo")
-    if (store.state.screenInfo.width >= 1200) {
+    store.commit(account.path + "getScreenInfo")
+    if (account.state.screenInfo.width >= 1200) {
       listenerIsEvent.value = false
       leftBarForPC.value = true
     } else {
@@ -218,14 +217,6 @@ const onChange = (data) => {
 
 const showSettingBar = () => {
   settingBarIsOpen.value = !settingBarIsOpen.value
-}
-/**
- * ユーザログアウト
- */
-const signOut = async () => {
-  await store.state.AuthService.signOutAccount().then(() => {
-    router.push({ name: "LoginPage" })
-  })
 }
 
 /**

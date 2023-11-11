@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
+   <div v-show="account.state.isLoading" class="w-screen h-screen flex justify-center items-center">
+    <Loading />
+  </div>
+  <div v-show="!account.state.isLoading" class="flex flex-col justify-center flex-1 min-h-full px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h1
         class="mt-10 text-6xl font-bold leading-9 tracking-tight tracking-wide text-center text-white Titan_One"
@@ -150,8 +153,10 @@
 import { ref, computed } from "vue"
 import store from "../store"
 import router from "../router"
+import Loading from "@/components/Customizeloading.vue"
 
-const AuthService = store.state.AuthService
+const account = { state: store.state.accountState, path: "accountState/" }
+
 //登録のアカウトデータ
 const registerInfo = ref({
   name: "",
@@ -171,18 +176,9 @@ const confirmPassword = computed(() => {
 /**
  *アカウント作成メソッド
  */
-const register = async () => {
-  console.log("Register start", registerInfo.value)
+const register = async () => {  
   if (confirmPassword.value && registerInfo.value.email !== "") {
-    try {
-      const registerResult = await AuthService.registerAccount(registerInfo)
-      if (registerResult !== false) {
-        await AuthService.sendVerificationMail(registerResult)
-        router.push({ name: "HomePage" })
-      }
-    } catch (e) {
-      console.error("error", e)
-    }
+    store.dispatch(account.path + "register", { registerInfo: registerInfo.value })
   }
 }
 </script>

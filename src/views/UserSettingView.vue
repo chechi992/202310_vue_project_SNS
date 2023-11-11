@@ -71,8 +71,6 @@
             toHomeView
           </button>
         </div>
-
-        <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
       </div>
     </div>
 
@@ -117,11 +115,9 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
   )
 }
 
-/**
- * 抓取用戶資料
- */
 onMounted(async () => {
   console.log("User is logined:", store.state.userInfo)
+  //抓取用戶資料
   const userData = await store.state.FbService.getDataByDocName("users", store.state.userInfo.uid)
 
   if (userData) {
