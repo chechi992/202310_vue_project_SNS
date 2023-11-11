@@ -9,7 +9,6 @@ import store from "./store"
 import { FbService } from "./servcies/FbService"
 
 const fbService = new FbService()
-
 const routes = [
   {
     path: "/",
@@ -47,7 +46,11 @@ router.beforeEach(async (to, from, next) => {
     await authStateChanged().then(async (result) => {
       if (result.uid) {
         const userInfo = await fbService.getDataByDocName("users", result.uid)
-        store.commit("accountState/loginSuccess", { accountInfo: result, userInfo: userInfo }, { root: true })
+        store.commit(
+          "accountState/loginSuccess",
+          { accountInfo: result, userInfo: userInfo },
+          { root: true }
+        )
         //LoginPageにいて、ユーザログインしてる場合 → HomePageへ遷移
         if (from.fullPath === "/" && to.fullPath === "/") router.push({ name: "HomePage" })
       }

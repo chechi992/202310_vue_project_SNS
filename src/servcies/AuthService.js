@@ -57,7 +57,7 @@ export class AuthService {
    * @returns ログイン結果：ユーザー情報、エラーメッセージ
    */
   singnInAccount = async (loginInfo) => {
-    console.log("AuthService SignIn start", loginInfo)
+    console.log("AuthService SignIn start email:", loginInfo.email,"pwd : ", loginInfo.pwd)
     let result
     await signInWithEmailAndPassword(auth, loginInfo.email, loginInfo.pwd)
       .then(() => {
@@ -68,7 +68,7 @@ export class AuthService {
         console.error("AuthService SignIn Fail: ", error.code)
         result = this.#errMsgResult(error.code)
       })
-    console.log("AuthService SignIn end", result)
+    console.log("AuthService SignIn end", result.uid)
     return result
   }
 
