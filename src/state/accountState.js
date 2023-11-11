@@ -30,7 +30,7 @@ export const accountState = {
     },
     logout(state) {
       state.accountInfo = { uid: "", isEmailVerified: false }
-      state.userInfo = { email: "", name: "", photoUrl: "", followerUsersUid: [] }
+      state.userInfo = { email: "", name: "", photoUrl: "", followerUsersUid: [], firendsUid: [] }
     },
     loginSuccess( state , { accountInfo, userInfo }) {
       state.accountInfo = accountInfo
