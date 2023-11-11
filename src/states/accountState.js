@@ -1,6 +1,6 @@
-import { AuthService } from "../servcie/AuthService"
+import { AuthService } from "../servcies/AuthService"
 import router from "../router"
-import { FbService } from "../servcie/FbService"
+import { FbService } from "../servcies/FbService"
 
 const authService = new AuthService()
 const fbService = new FbService()

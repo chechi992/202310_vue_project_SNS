@@ -6,7 +6,7 @@ import RegisterView from "../src/views/RegisterView.vue"
 import LoginView from "../src/views/LoginView.vue"
 import HomeView from "../src/views/HomeView.vue"
 import store from "./store"
-import { FbService } from "./servcie/FbService"
+import { FbService } from "./servcies/FbService"
 
 const fbService = new FbService()
 
