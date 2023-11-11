@@ -23,13 +23,13 @@
             <div class="flex flex-col flex-grow">
               <label class="block mb-2 text-white">メールアドレス</label>
               <label for="email" class="flex-grow p-2 text-white bg-gray_800">{{
-                store.state.userInfo.email
+                account.state.userInfo.email
               }}</label>
             </div>
             <div class="flex flex-col flex-grow">
               <label class="block mb-2 text-white">ユーザ名</label>
               <span v-if="!editing" class="p-2 text-white bg-gray_800">{{
-                store.state.userInfo.name
+                account.state.userInfo.name
               }}</span>
               <input
                 v-if="editing"
@@ -71,8 +71,6 @@
             toHomeView
           </button>
         </div>
-
-        <!-- <button class="text-white" @click="SignOut" v-if="isLoggedIn">Sign out</button> -->
       </div>
     </div>
 
@@ -107,6 +105,7 @@ const route = useRoute()
 console.log("route", route.params)
 const editing = ref(false)
 const editedDisplayName = ref("")
+const account = { state: store.state.accountState, path: "accountState/" }
 
 //カスタマイズ属性
 const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
@@ -117,16 +116,12 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
   )
 }
 
-/**
- * 抓取用戶資料
- */
 onMounted(async () => {
-  console.log("User is logined:", store.state.userInfo)
-  const userData = await store.state.FbService.getDataByDocName("users", store.state.userInfo.uid)
+  console.log("User is logined:", account.state.userInfo)
+  //抓取用戶資料
+  const userData = account.userInfo
 
   if (userData) {
-    // 更新名字
-    store.state.userInfo.name = userData.name
     // 更新 editedDisplayName
     editedDisplayName.value = userData.name
   }
@@ -137,7 +132,7 @@ onMounted(async () => {
  */
 const startEditing = () => {
   editing.value = true
-  editedDisplayName.value = store.state.userInfo.name
+  editedDisplayName.value = account.state.userInfo.name
 }
 
 /**
@@ -152,7 +147,7 @@ const completeEditing = () => {
  */
 const cancelEditing = () => {
   editing.value = false
-  editedDisplayName.value = store.state.userInfo.name
+  editedDisplayName.value = account.state.userInfo.name
 }
 
 /**
@@ -162,7 +157,7 @@ const updateUserProfile = async () => {
   try {
     await store.state.FbService.updateDataByDocName(
       "users",
-      store.state.userInfo.uid,
+      account.state.userInfo.uid,
       editedDisplayName.value
     )
     // 將 indexUserInfo.name 設置為新的名稱

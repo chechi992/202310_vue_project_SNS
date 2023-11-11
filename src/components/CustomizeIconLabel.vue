@@ -10,7 +10,7 @@
       '--labelPb': myPadding.bottom + 'px',
       '--labelPl': myPadding.left + 'px',
       '--labelPr': myPadding.right + 'px',
-      '--borderRadius': borderRadius + 'px',
+      '--borderRadius': myborderRadius + 'px',
       '--backgroundColor': myBgColor,
       '--hoverBgColor': myHoverBgColor,
       '--hoverPointer': cursortype
@@ -44,7 +44,7 @@
       '--labelPb': myPadding.bottom + 'px',
       '--labelPl': myPadding.left + 'px',
       '--labelPr': myPadding.right + 'px',
-      '--borderRadius': borderRadius + 'px',
+      '--borderRadius': myborderRadius + 'px',
       '--backgroundColor': myBgColor
     }"
     v-else-if="mode === 'input'"
@@ -140,7 +140,7 @@ if (props.mode === "input") {
   myBgColor = ref(props.bgColor ? props.bgColor : "#4A4A4A")
   myHoverBgColor = ref(props.hoverBgColor ? props.hoverBgColor : "#93a1e9")
 }
-const borderRadius = ref(props.borderRadius ? props.borderRadius : 5)
+const myborderRadius = ref(props.borderRadius ? props.borderRadius : 0)
 const myMargin = ref({ bottom: 0, top: 0, left: 0, right: 0 })
 const myPadding = ref({ bottom: 0, top: 0, left: 0, right: 0 })
 

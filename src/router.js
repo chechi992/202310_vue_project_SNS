@@ -6,6 +6,9 @@ import RegisterView from "../src/views/RegisterView.vue"
 import LoginView from "../src/views/LoginView.vue"
 import HomeView from "../src/views/HomeView.vue"
 import store from "./store"
+import { FbService } from "./servcies/FbService"
+
+const fbService = new FbService()
 
 const routes = [
   {
@@ -40,24 +43,21 @@ router.beforeEach(async (to, from, next) => {
   console.log("beforeEach to", to)
   console.log("beforeEach from", from)
 
-  if (!store.state.userInfo.uid) {
-    await authStateChanged()
-      .then((result) => {
-        if (result.uid) {
-          store.commit("setUserInfo", result);
-          //LoginPageにいて、ユーザログインしてる場合 → HomePageへ遷移
-          if (from.fullPath === "/" && to.fullPath === "/")
-            router.push({ name: "HomePage" })
-        }
-        if (!result) {
-          //例外：登録画面へ遷移
-          if (to.fullPath === "/Register" || from.fullPath === "/Register")
-            console.log("登録画面");
-          //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
-          else if (to.fullPath !== "/" && from.fullPath === "/")
-            router.push({ name: "LoginPage" })
-        }
-      })
+  if (!store.state.accountState.accountInfo.uid) {
+    await authStateChanged().then(async (result) => {
+      if (result.uid) {
+        const userInfo = await fbService.getDataByDocName("users", result.uid)
+        store.commit("accountState/loginSuccess", { accountInfo: result, userInfo: userInfo }, { root: true })
+        //LoginPageにいて、ユーザログインしてる場合 → HomePageへ遷移
+        if (from.fullPath === "/" && to.fullPath === "/") router.push({ name: "HomePage" })
+      }
+      if (!result) {
+        //例外：登録画面へ遷移
+        if (to.fullPath === "/Register" || from.fullPath === "/Register") console.log("登録画面")
+        //LoginPageにいなくて、ユーザログインしていない場合 → LoginPageへ遷移
+        else if (to.fullPath !== "/" && from.fullPath === "/") router.push({ name: "LoginPage" })
+      }
+    })
   }
 
   //遷移ためnext()を使用する;
