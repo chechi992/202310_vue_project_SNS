@@ -1,5 +1,5 @@
 <template>
-  <div v-show="!isLoading" class="flex flex-col-reverse p-5 m-auto min-[475px]:flex-row">
+  <div class="flex flex-col-reverse p-5 m-auto min-[475px]:flex-row">
     <div
       class="hidden sm:w-1/4 sm:block first-letter:8w-1/4 border-r-[1px] border-gray_800 h-screen"
     >
@@ -16,23 +16,26 @@
       </div>
     </div>
 
-    <div class="sm:w-1/2">
+    <div v-show="user.state.isLoading" class="w-screen h-screen flex justify-center items-center">
+      <Loading />
+    </div>
+    <div v-show="!user.state.isLoading" class="sm:w-1/2">
       <div class="w-auto">
         <div class="px-3 py-5 mx-6 mt-16 bg-gray_500">
           <div class="flex flex-col gap-3 form_group">
             <div class="flex flex-col flex-grow">
               <label class="block mb-2 text-white">メールアドレス</label>
               <label for="email" class="flex-grow p-2 text-white bg-gray_800">{{
-                account.state.userInfo.email
+                user.state.userInfo.email
               }}</label>
             </div>
             <div class="flex flex-col flex-grow">
               <label class="block mb-2 text-white">ユーザ名</label>
-              <span v-if="!editing" class="p-2 text-white bg-gray_800">{{
-                account.state.userInfo.name
+              <span v-if="!isEditing" class="p-2 text-white bg-gray_800">{{
+                user.state.userInfo.name
               }}</span>
               <input
-                v-if="editing"
+                v-if="isEditing"
                 class="p-2 bg-white text-gray_800"
                 v-model="editedDisplayName"
               />
@@ -41,7 +44,7 @@
         </div>
         <div class="mt-3 form_group">
           <button
-            v-if="editing"
+            v-if="isEditing"
             class="text-white"
             @click="completeEditing"
             v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
@@ -49,7 +52,7 @@
             Complete
           </button>
           <button
-            v-if="editing"
+            v-if="isEditing"
             class="text-white"
             @click="cancelEditing"
             v-bind:class="[customizeStyle(buttonCustomizaStyleAttribute)]"
@@ -73,8 +76,7 @@
         </div>
       </div>
     </div>
-
-    <div class="">
+    <div v-show="!user.state.isLoading" class="">
       <div class="form_group">
         <div class="flex flex-col items-center gap-4">
           <div class="flex items-center justify-center w-16 h-16 bg-gray-300 rounded-full">
@@ -99,13 +101,15 @@ import { useRoute } from "vue-router"
 import { ref, onMounted } from "vue"
 import store from "../store"
 import router from "../router"
+import Loading from "@/components/Customizeloading.vue"
 
 //router初期化
 const route = useRoute()
 console.log("route", route.params)
-const editing = ref(false)
+const isEditing = ref(false)
 const editedDisplayName = ref("")
 const account = { state: store.state.accountState, path: "accountState/" }
+const user = { state: store.state.userState, path: "userState/" }
 
 //カスタマイズ属性
 const buttonCustomizaStyleAttribute = { margin: 10, padding: 10, background_color: "#f43f5e" }
@@ -117,59 +121,33 @@ const customizeStyle = ({ margin: m, padding: p, background_color: bcolor }) => 
 }
 
 onMounted(async () => {
-  console.log("User is logined:", account.state.userInfo)
-  //抓取用戶資料
-  const userData = account.userInfo
-
-  if (userData) {
-    // 更新 editedDisplayName
-    editedDisplayName.value = userData.name
-  }
+  console.log("User is logined:", account.state.accountInfo, "userInfo:", user.state.userInfo)
 })
 
 /**
  * 開始編輯，故一開始為true
  */
 const startEditing = () => {
-  editing.value = true
-  editedDisplayName.value = account.state.userInfo.name
+  isEditing.value = true
+  editedDisplayName.value = user.state.userInfo.name
 }
 
-/**
- * 完成編輯
- */
-const completeEditing = () => {
-  editing.value = false
-  updateUserProfile()
-}
 /**
  * 取消編輯
  */
 const cancelEditing = () => {
-  editing.value = false
-  editedDisplayName.value = account.state.userInfo.name
+  isEditing.value = false
+  editedDisplayName.value = user.state.userInfo.name
 }
-
 /**
- * 更新userprofile
+ * 完成編輯
  */
-const updateUserProfile = async () => {
-  try {
-    await store.state.FbService.updateDataByDocName(
-      "users",
-      account.state.userInfo.uid,
-      editedDisplayName.value
-    )
-    // 將 indexUserInfo.name 設置為新的名稱
-
-    let tmpUserInfo = store.state.userInfo
-    tmpUserInfo.name = editedDisplayName.value
-    store.commit("setUserInfo", tmpUserInfo)
-
-    console.log("User profile updated successfully!", editedDisplayName.value)
-  } catch (error) {
-    console.error("Error updating user profile:", error)
-  }
+const completeEditing = async () => {
+  isEditing.value = false
+  store.dispatch(user.path + "updateUserInfo", {
+    uid: account.state.accountInfo.uid,
+    updateInfo: editedDisplayName.value
+  })
 }
 
 /**

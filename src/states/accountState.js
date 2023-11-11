@@ -9,7 +9,6 @@ export const accountState = {
   namespaced: true,
   state: {
     accountInfo: { uid: "", email: "", isEmailVerified: false },
-    userInfo: { uid: "", name: "", photoUrl: "", followUsersUid: [], firendsUid: [] },
     isLoading: false,
     errMessage: "",
     registerErrMsg: "",
@@ -30,11 +29,9 @@ export const accountState = {
     },
     logout(state) {
       state.accountInfo = { uid: "", isEmailVerified: false }
-      state.userInfo = { email: "", name: "", photoUrl: "", followerUsersUid: [], firendsUid: [] }
     },
-    loginSuccess( state , { accountInfo, userInfo }) {
+    loginSuccess(state, { accountInfo }) {
       state.accountInfo = accountInfo
-      state.userInfo = userInfo
       state.isLoading = false
     },
     loginFail(state, msg) {
@@ -48,7 +45,7 @@ export const accountState = {
   },
   actions: {
     async register({ commit }, { registerInfo }) {
-        commit("loading")
+      commit("loading")
       const registerResult = await authService.registerAccount(registerInfo)
       if (registerResult) {
         await authService.sendVerificationMail(registerResult)
@@ -56,7 +53,8 @@ export const accountState = {
         const loginResult = await authService.singnInAccount(loginInfo)
         if (loginResult.uid) {
           const userInfo = await fbService.getDataByDocName("users", loginResult.uid)
-          commit("loginSuccess", { accountInfo: loginResult, userInfo: userInfo })
+          commit("userState/setUserInfo", { userInfo: userInfo }, { root: true })
+          commit("loginSuccess", { accountInfo: loginResult })
           router.push({ name: "HomePage" })
         } else {
           commit("loginFail", loginResult)
@@ -71,7 +69,8 @@ export const accountState = {
       const loginResult = await authService.singnInAccount(loginInfo)
       if (loginResult.uid) {
         const userInfo = await fbService.getDataByDocName("users", loginResult.uid)
-        commit("loginSuccess", { accountInfo: loginResult, userInfo: userInfo })
+        commit("userState/setUserInfo", { userInfo: userInfo }, { root: true })
+        commit("loginSuccess", { accountInfo: loginResult })
         router.push({ name: "HomePage" })
       } else {
         commit("loginFail", loginResult)

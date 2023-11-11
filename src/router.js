@@ -46,11 +46,8 @@ router.beforeEach(async (to, from, next) => {
     await authStateChanged().then(async (result) => {
       if (result.uid) {
         const userInfo = await fbService.getDataByDocName("users", result.uid)
-        store.commit(
-          "accountState/loginSuccess",
-          { accountInfo: result, userInfo: userInfo },
-          { root: true }
-        )
+        store.commit("accountState/loginSuccess", { accountInfo: result }, { root: true })
+        store.commit("userState/setUserInfo", { userInfo: userInfo }, { root: true })
         //LoginPageにいて、ユーザログインしてる場合 → HomePageへ遷移
         if (from.fullPath === "/" && to.fullPath === "/") router.push({ name: "HomePage" })
       }

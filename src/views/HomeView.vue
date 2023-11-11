@@ -120,6 +120,8 @@ import IconLabel from "../components/CustomizeIconLabel.vue"
 
 
 const account = { state: store.state.accountState, path: "accountState/" }
+const user = { state: store.state.userState, path: "userState/" }
+
 const settingBarIsOpen = ref(false)
 const modalIsOpen = ref(false)
 const leftBarItems = ref([
@@ -174,8 +176,7 @@ const leftBarForPC = ref(account.state.screenInfo.width >= 1200 ? true : false)
 const listenerIsEvent = ref(false)
 
 onMounted(async () => {
-  console.log("User is logined:", account.state.accountInfo, "userInfo:", account.state.userInfo)
-
+  console.log("User is logined:", account.state.accountInfo, "userInfo:", user.state.userInfo)
   window.addEventListener("resize", () => {
     store.commit(account.path + "getScreenInfo")
     if (account.state.screenInfo.width >= 1200) {

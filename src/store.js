@@ -1,9 +1,11 @@
 import { createStore } from "vuex"
 import { accountState } from "./states/accountState"
+import { userState } from "./states/userState"
 
 const store = createStore({
   modules: {
-    accountState: accountState
+    accountState: accountState,
+    userState:userState
   }
 })
 
