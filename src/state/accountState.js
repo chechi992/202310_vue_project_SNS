@@ -71,7 +71,6 @@ export const accountState = {
       const loginResult = await authService.singnInAccount(loginInfo)
       if (loginResult.uid) {
         const userInfo = await fbService.getDataByDocName("users", loginResult.uid)
-        console.log("userInfo:", userInfo)
         commit("loginSuccess", { accountInfo: loginResult, userInfo: userInfo })
         router.push({ name: "HomePage" })
       } else {

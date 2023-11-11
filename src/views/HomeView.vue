@@ -118,7 +118,8 @@ import Loading from "@/components/Customizeloading.vue"
 import Modal from "../components/CustomizeModal.vue"
 import IconLabel from "../components/CustomizeIconLabel.vue"
 
-//ロディングフラグ
+
+const account = { state: store.state.accountState, path: "accountState/" }
 const settingBarIsOpen = ref(false)
 const modalIsOpen = ref(false)
 const leftBarItems = ref([
@@ -168,7 +169,6 @@ const settingBarItems = ref([
     }
   }
 ])
-const account = { state: store.state.accountState, path: "accountState/" }
 const smallSizeIcons = ref(null)
 const leftBarForPC = ref(account.state.screenInfo.width >= 1200 ? true : false)
 const listenerIsEvent = ref(false)

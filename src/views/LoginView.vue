@@ -148,7 +148,7 @@ const toRegisterView = () => {
  * ログイン処理する
  */
 const SignIn = () => {
-  store.dispatch(account.path + "login", { loginInfo: loginInfo.value ,mode:'login'})
+  store.dispatch(account.path + "login", { loginInfo: loginInfo.value})
 }
 </script>
 
